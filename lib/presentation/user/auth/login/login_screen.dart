@@ -1,7 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:user_auth/presentation/user/notifier/login_notifier.dart';
+import 'package:user_auth/presentation/user/auth/login/notifier/login_notifier.dart';
+import 'package:user_auth/presentation/user/auth/register/register_screen.dart';
 import 'package:user_auth/theme/app_text_style.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -165,7 +166,33 @@ class LoginScreen extends StatelessWidget {
                                         style: 15.sp(),
                                       )),
                                 ),
-                              )
+                              ),
+                              SizedBox(
+                                height: 14,
+                              ),
+                              Center(
+                                  child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => RegisterScreen(),
+                                      ));
+                                },
+                                child: RichText(
+                                    text: TextSpan(style: 15.sp(), children: [
+                                  TextSpan(
+                                      text: 'Join us-',
+                                      style: 14.sp(color: Color(0xFFFFAB91))),
+                                  TextSpan(
+                                      text: 'Register now!',
+                                      style: 14
+                                          .sp(color: Color(0xFFFFAB91))
+                                          .copyWith(
+                                              decoration:
+                                                  TextDecoration.underline))
+                                ])),
+                              ))
                             ],
                           ))
                     ],
