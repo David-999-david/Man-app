@@ -47,6 +47,50 @@ class RegisterScreen extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.only(top: 25, left: 7),
                                 child: Text(
+                                  'Name',
+                                  style: 16.sp(color: Color(0xFFFFAB91)),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(
+                                  controller: provider.emailCtr,
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color(0xFFBDBDBD),
+                                      hintText: 'Enter your name',
+                                      hintStyle: 15.sp(),
+                                      errorStyle: 15.sp(color: Colors.red),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 14, vertical: 6),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide:
+                                              BorderSide(color: Colors.white)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide:
+                                              BorderSide(color: Colors.white))),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Name can\'t be empty!';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5, left: 7),
+                                child: Text(
                                   'Email',
                                   style: 16.sp(color: Color(0xFFFFAB91)),
                                 ),
