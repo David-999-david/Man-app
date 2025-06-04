@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:user_auth/main.dart';
 
 class AppNavigator {
+  static GlobalKey<NavigatorState> get key => navigationKey;
+
   static void pop<T extends Object?>(BuildContext context, [T? result]) {
     Navigator.pop<T>(context, result);
   }
@@ -10,11 +13,12 @@ class AppNavigator {
         context, MaterialPageRoute<T>(builder: (context) => page));
   }
 
-  static Future<T?> pushAndRemoveUntil<T extends Object?>(
-      BuildContext context, Widget page) {
-    return Navigator.pushAndRemoveUntil<T>(
-        context,
-        MaterialPageRoute<T>(builder: (context) => page),
+  static Future<T?> pushAndRemoveUntil<T extends Object?>(Widget page) {
+    final ctx = key.currentContext;
+    if (ctx == null) return Future.value(null);
+
+    return Navigator.of(ctx).pushAndRemoveUntil<T>(
+        MaterialPageRoute(builder: (_) => page),
         (Route<dynamic> route) => false);
   }
 
