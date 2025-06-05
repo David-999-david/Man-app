@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/presentation/user/auth/login/notifier/login_notifier.dart';
 import 'package:user_auth/presentation/user/auth/register/register_screen.dart';
-import 'package:user_auth/theme/app_text_style.dart';
+import 'package:user_auth/core/theme/app_text_style.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

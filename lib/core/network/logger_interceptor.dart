@@ -10,19 +10,19 @@ class LoggerInterceptor extends Interceptor{
     options.extra['startTime'] = DateTime.now();
 
     final fullPath = '${options.baseUrl}${options.path}';
-    logger.i('Method => ${options.method} $fullPath');
+    logger.i('Request Method => ${options.method} $fullPath');
 
     if (options.headers.isNotEmpty) {
-      options.headers.forEach((k, v) => logger.i('Headers => $k $v'));
+      options.headers.forEach((k, v) => logger.i('Request Headers => $k $v'));
     }
     if (options.queryParameters.isNotEmpty) {
-      logger.i('Query   => ${options.queryParameters}');
+      logger.i('Request Query   => ${options.queryParameters}');
     }
     if (options.data != null) {
-      logger.i('Data Body  => ${options.data}');
+      logger.i('Request Data Body  => ${options.data}');
     }
 
-    logger.i('End => ${options.method}');
+    logger.i('Request End => ${options.method}');
     handler.next(options);
   }
 
@@ -34,20 +34,20 @@ class LoggerInterceptor extends Interceptor{
 
     if (startTime != null) {
       final ms = DateTime.now().difference(startTime).inMilliseconds;
-      logger.i('${ms} ms , ${response.statusCode} $fullPath');
+      logger.i('$ms Response ms , ${response.statusCode} $fullPath');
     } else {
-      logger.i('${response.statusCode} $fullPath');
+      logger.i('Response => ${response.statusCode} $fullPath');
     }
 
     if (response.headers.isEmpty) {
-      logger.i('Header missing : ${response.statusCode}');
+      logger.i('Response Header missing : ${response.statusCode}');
     } else {
-      response.headers.forEach((k, v) => logger.i('Headers : $k : $v'));
+      response.headers.forEach((k, v) => logger.i('Response Headers : $k : $v'));
     }
 
     logger.i('Response body : ${response.data}');
 
-    logger.i('END');
+    logger.i('Response END');
 
     handler.next(response);
   }
@@ -61,17 +61,17 @@ class LoggerInterceptor extends Interceptor{
 
     if (startTime != null) {
       final ms = DateTime.now().difference(startTime).inMilliseconds;
-      logger.i('$ms : ms, ${options.method} $fullPath, $statusCode');
+      logger.i('$ms : Error request ms, ${options.method} $fullPath, $statusCode');
     } else {
-      logger.i('${options.method} $fullPath , $statusCode');
+      logger.i('Error => ${options.method} $fullPath , $statusCode');
     }
 
     if (options.data != null) {
-      logger.i('Request Body : ${options.data}');
+      logger.i('Error Request Body : ${options.data}');
     }
 
     if (err.response?.data != null) {
-      logger.i('Response Body : ${err.response?.data}');
+      logger.i('Error Response Body : ${err.response?.data}');
     }
 
     logger.d('Error message : ${err.message}');

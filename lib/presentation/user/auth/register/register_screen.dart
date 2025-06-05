@@ -1,9 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:user_auth/presentation/user/auth/login/login_screen.dart';
+import 'package:user_auth/presentation/user/auth/home/home_screen.dart';
 import 'package:user_auth/presentation/user/auth/register/notifier/register_notifier.dart';
-import 'package:user_auth/theme/app_text_style.dart';
+import 'package:user_auth/core/theme/app_text_style.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -57,7 +57,7 @@ class RegisterScreen extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextFormField(
-                                  controller: provider.emailCtr,
+                                  controller: provider.nameCtr,
                                   keyboardType: TextInputType.emailAddress,
                                   decoration: InputDecoration(
                                       filled: true,
@@ -202,13 +202,14 @@ class RegisterScreen extends StatelessWidget {
                                               borderRadius:
                                                   BorderRadius.circular(10)),
                                           fixedSize: Size(80, 32)),
-                                      onPressed: () {
+                                      onPressed: () async {
                                         if (formKey.currentState!.validate()) {
+                                          await provider.register();
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    LoginScreen(),
+                                                    HomeScreen(),
                                               ));
                                         }
                                       },

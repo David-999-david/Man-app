@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:user_auth/common/constant/local_name.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
-import 'package:user_auth/network/storage_utils.dart';
+import 'package:user_auth/core/network/storage_utils.dart';
 import 'package:user_auth/presentation/user/auth/login/login_screen.dart';
 
 class AuthInterceptor extends Interceptor {
