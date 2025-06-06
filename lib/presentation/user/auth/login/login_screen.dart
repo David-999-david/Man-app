@@ -1,6 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:user_auth/common/helper/app_navigator.dart';
+import 'package:user_auth/presentation/user/auth/home/home_screen.dart';
 import 'package:user_auth/presentation/user/auth/login/notifier/login_notifier.dart';
 import 'package:user_auth/presentation/user/auth/register/register_screen.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
@@ -158,8 +160,12 @@ class LoginScreen extends StatelessWidget {
                                               borderRadius:
                                                   BorderRadius.circular(10)),
                                           fixedSize: Size(80, 32)),
-                                      onPressed: () {
-                                        if (formKey.currentState!.validate()) {}
+                                      onPressed: () async {
+                                        if (formKey.currentState!.validate()) {
+                                          await provider.login();
+                                          AppNavigator.pushReplacement(
+                                              context, HomeScreen(), null);
+                                        }
                                       },
                                       child: Text(
                                         'Log in',

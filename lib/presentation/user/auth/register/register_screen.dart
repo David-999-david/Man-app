@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/presentation/user/auth/home/home_screen.dart';
 import 'package:user_auth/presentation/user/auth/register/notifier/register_notifier.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
@@ -205,12 +206,8 @@ class RegisterScreen extends StatelessWidget {
                                       onPressed: () async {
                                         if (formKey.currentState!.validate()) {
                                           await provider.register();
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    HomeScreen(),
-                                              ));
+                                          AppNavigator.pushReplacement(
+                                              context, HomeScreen(), null);
                                         }
                                       },
                                       child: Text(
