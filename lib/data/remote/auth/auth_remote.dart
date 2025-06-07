@@ -24,7 +24,7 @@ class AuthRemote {
         final refresh = data['refreshToken'];
         if (access != null) {
           final local = await StorageUtils.getInstance();
-          await local!.putString(LocalName.authToken, access);
+          await local!.putString(LocalName.access, access);
         } else {
           throw Exception('Token is missing');
         }
@@ -53,7 +53,7 @@ class AuthRemote {
         final refresh = data['refreshToken'];
         if (access != null) {
           final local = await StorageUtils.getInstance();
-          await local!.putString(LocalName.authToken, access);
+          await local!.putString(LocalName.access, access);
         } else {
           throw Exception('Token is missing');
         }

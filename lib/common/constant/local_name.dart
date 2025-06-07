@@ -1,4 +1,4 @@
 class LocalName {
-  static const authToken = 'auth_token';
+  static const access = 'access_token';
   static const refreshToken = 'refresh_token';
 }
