@@ -2,10 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:user_auth/common/constant/api_url.dart';
 import 'package:user_auth/common/constant/local_name.dart';
+import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/core/network/dio_client.dart';
 import 'package:user_auth/core/network/storage_utils.dart';
 import 'package:user_auth/data/model/auth/login_model.dart';
 import 'package:user_auth/data/model/auth/register_model.dart';
+import 'package:user_auth/data/model/auth/user_model.dart';
+import 'package:user_auth/presentation/user/auth/login/login_screen.dart';
 
 class AuthRemote {
   final Dio _dio = DioClient().dio;
@@ -16,12 +19,18 @@ class AuthRemote {
 
       final code = response.statusCode;
       if (code != null && code >= 200 && code < 300) {
-        final token = response.data['token'];
-        if (token != null) {
+        final data = response.data['data'];
+        final access = data['accessToken'];
+        final refresh = data['refreshToken'];
+        if (access != null) {
           final local = await StorageUtils.getInstance();
-          await local!.putString(LocalName.authToken, token);
+          await local!.putString(LocalName.authToken, access);
         } else {
           throw Exception('Token is missing');
+        }
+        if (refresh != null) {
+          final local = await StorageUtils.getInstance();
+          await local!.putString(LocalName.refreshToken, refresh);
         }
       } else {
         throw Exception('Fialed status in register : ${response.statusCode}');
@@ -39,12 +48,18 @@ class AuthRemote {
 
       final code = response.statusCode;
       if (code != null && code >= 200 && code < 300) {
-        final token = response.data['token'];
-        if (token != null) {
+        final data = response.data['data'];
+        final access = data['accessToken'];
+        final refresh = data['refreshToken'];
+        if (access != null) {
           final local = await StorageUtils.getInstance();
-          await local!.putString(LocalName.authToken, token);
+          await local!.putString(LocalName.authToken, access);
         } else {
           throw Exception('Token is missing');
+        }
+        if (refresh != null) {
+          final local = await StorageUtils.getInstance();
+          await local!.putString(LocalName.refreshToken, refresh);
         }
       } else {
         throw Exception(
@@ -53,6 +68,23 @@ class AuthRemote {
     } on DioException catch (err) {
       debugPrint(
           'Error when login  ${err.response?.statusCode}${err.response?.data}');
+    }
+  }
+
+  Future<UserModel> getUserProfile() async {
+    try {
+      final response = await _dio.get(ApiUrl.getProfile);
+      if (response.statusCode != null && response.statusCode == 201) {
+        return UserModel.fromJson(response.data);
+      }
+      throw Exception(
+          'Failed to load profile Status => ${response.statusCode}');
+    } on DioException catch (err) {
+      if (err.response?.statusCode == 401 || err.error == 'SESSION_EXPIRED') {
+        AppNavigator.pushAndRemoveUntil(LoginScreen());
+        throw Exception('Session expired');
+      }
+      rethrow;
     }
   }
 }

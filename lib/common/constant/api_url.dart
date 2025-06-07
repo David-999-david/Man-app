@@ -4,4 +4,8 @@ class ApiUrl {
   static const register = 'signup';
 
   static const login = 'signin';
+
+  static const getProfile = 'me';
+
+  static const refresh = 'token/refresh';
 }
