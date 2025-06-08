@@ -23,12 +23,15 @@ class LoginNotifier extends ChangeNotifier {
     }
   }
 
-  Future<void> login() async {
+  Future<bool> login() async {
     _isLoading = true;
     notifyListeners();
     try {
       final payload = LoginModel(email: _emailCtr.text, password: _pssCtr.text);
       await AuthUsecase().login(payload);
+      return true;
+    } catch (e) {
+      return false;
     } finally {
       _isLoading = false;
       notifyListeners();

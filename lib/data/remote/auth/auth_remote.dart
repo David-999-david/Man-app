@@ -81,10 +81,18 @@ class AuthRemote {
           'Failed to load profile Status => ${response.statusCode}');
     } on DioException catch (err) {
       if (err.response?.statusCode == 401 || err.error == 'SESSION_EXPIRED') {
-        AppNavigator.pushAndRemoveUntil(LoginScreen());
+        signout();
         throw Exception('Session expired');
       }
       rethrow;
     }
+  }
+
+  Future<void> signout() async {
+    final local = await StorageUtils.getInstance();
+    await local!.remove(LocalName.access);
+    await local.remove(LocalName.refreshToken);
+
+    AppNavigator.pushAndRemoveUntil(LoginScreen());
   }
 }

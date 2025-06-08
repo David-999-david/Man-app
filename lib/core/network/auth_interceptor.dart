@@ -9,22 +9,46 @@ import 'package:user_auth/core/network/storage_utils.dart';
 class AuthInterceptor extends Interceptor {
   final StorageUtils _storageUtils;
 
-  AuthInterceptor._(this._storageUtils);
+  final Dio _refreshDio;
 
-  final Dio _dio = DioClient().dio;
+  static const _publicPaths = <String>['signin', 'singup', 'token/refresh'];
+
+  AuthInterceptor._(this._storageUtils, this._refreshDio);
 
   static Future<AuthInterceptor> create() async {
     final storage = await StorageUtils.getInstance();
-    return AuthInterceptor._(storage!);
+    final refreshDio = Dio(BaseOptions(baseUrl: ApiUrl.baseUrl));
+    return AuthInterceptor._(storage!, refreshDio);
   }
 
   @override
   Future<void> onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    String? access = await _storageUtils.getString(LocalName.access);
-    bool expired = access == null || JwtDecoder.isExpired(access);
+    if (_publicPaths.any((p) => options.path.endsWith((p)))) {
+      return handler.next(options);
+    }
 
-    if (expired) {
+    String? refreshTok = await _storageUtils.getString(LocalName.refreshToken);
+
+    final bool refreshExpired =
+        (refreshTok == null) ? true : JwtDecoder.isExpired(refreshTok);
+
+    if (refreshExpired) {
+      return handler.reject(
+        DioException(
+            requestOptions: options,
+            response: Response(requestOptions: options, statusCode: 401),
+            error: 'SESSION_EXPIRED',
+            type: DioExceptionType.cancel),
+      );
+    }
+
+    String? access = await _storageUtils.getString(LocalName.access);
+
+    final bool accessExpired =
+        (access == null) ? true : JwtDecoder.isExpired(access);
+
+    if (accessExpired) {
       final refresh = await _refresh();
       if (!refresh) {
         return handler.reject(
@@ -35,7 +59,7 @@ class AuthInterceptor extends Interceptor {
               type: DioExceptionType.cancel),
         );
       }
-      access = _storageUtils.getString(LocalName.access);
+      access = await _storageUtils.getString(LocalName.access);
     }
 
     if (access != null && access.isNotEmpty) {
@@ -58,13 +82,13 @@ class AuthInterceptor extends Interceptor {
         if (access != null && access.isNotEmpty) {
           err.requestOptions.headers['Authorization'] = 'Bearer $access';
           try {
-            // final retry = await _dio.request(err.requestOptions.path,
+            // final retry = await _refreshDio.request(err.requestOptions.path,
             //     options: Options(
             //         method: err.requestOptions.method,
             //         headers: err.requestOptions.headers),
             //     data: err.requestOptions.data,
             //     queryParameters: err.requestOptions.queryParameters);
-            final retry = await _dio.fetch(err.requestOptions);
+            final retry = await _refreshDio.fetch(err.requestOptions);
             return handler.resolve(retry);
           } on DioException catch (e) {
             return handler.next(e);
@@ -76,23 +100,23 @@ class AuthInterceptor extends Interceptor {
   }
 
   Future<bool> _refresh() async {
-    final token = _storageUtils.getString(LocalName.refreshToken);
+    final token = await _storageUtils.getString(LocalName.refreshToken);
 
     if (token == null) return false;
 
     try {
       final response =
-          await _dio.post(ApiUrl.refresh, data: {'refreshToken': token});
+          await _refreshDio.post(ApiUrl.refresh, data: {'refreshToken': token});
 
       if (response.statusCode != null && response.statusCode == 201) {
         final data = response.data;
 
-        final newAccess = data['newAccess'];
-        final newRefresh = data['newRefresh'];
+        final newAccess = data['newAccess'] as String?;
+        final newRefresh = data['newRefresh'] as String?;
 
-        await _storageUtils.putString(LocalName.access, newAccess);
+        await _storageUtils.putString(LocalName.access, newAccess!);
 
-        await _storageUtils.putString(LocalName.refreshToken, newRefresh);
+        await _storageUtils.putString(LocalName.refreshToken, newRefresh!);
 
         return true;
       }

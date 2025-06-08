@@ -25,12 +25,15 @@ class RegisterNotifier extends ChangeNotifier {
     }
   }
 
-  Future<void> register() async {
+  Future<bool> register() async {
     _isLoading = true;
     notifyListeners();
     try {
       await AuthUsecase().register(RegisterModel(
           name: _nameCtr.text, email: _emailCtr.text, password: _pssCtr.text));
+      return true;
+    } catch (e) {
+      return false;
     } finally {
       _isLoading = false;
       notifyListeners();

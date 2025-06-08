@@ -1,5 +1,6 @@
 import 'package:user_auth/data/model/auth/login_model.dart';
 import 'package:user_auth/data/model/auth/register_model.dart';
+import 'package:user_auth/data/model/auth/user_model.dart';
 import 'package:user_auth/data/remote/auth/auth_remote.dart';
 
 class AuthRepo {
@@ -9,5 +10,13 @@ class AuthRepo {
 
   Future<void> login(LoginModel user){
     return AuthRemote().login(user);
+  }
+
+  Future<UserModel> getUserProfile() {
+    return AuthRemote().getUserProfile();
+  }
+
+  Future<void> signOut() {
+    return AuthRemote().signout();
   }
 }
