@@ -8,7 +8,7 @@ class AuthRepo {
     return AuthRemote().registerUser(user);
   }
 
-  Future<void> login(LoginModel user){
+  Future<void> login(LoginModel user) {
     return AuthRemote().login(user);
   }
 
@@ -18,5 +18,9 @@ class AuthRepo {
 
   Future<void> signOut() {
     return AuthRemote().signout();
+  }
+
+  Future<bool> isRealEmail(String email) {
+    return AuthRemote().isRealEmail(email);
   }
 }

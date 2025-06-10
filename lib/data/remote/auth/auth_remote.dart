@@ -42,6 +42,16 @@ class AuthRemote {
     }
   }
 
+  Future<bool> isRealEmail(String email) async {
+    try {
+      await _dio.post(ApiUrl.checkEmail, data: {"email": email});
+      return true;
+    } on DioException catch (e) {
+      final errorMsg = e.response?.data['error'] ?? 'Could not verify email';
+      throw Exception(errorMsg);
+    }
+  }
+
   Future<void> login(LoginModel user) async {
     try {
       final response = await _dio.post(ApiUrl.login, data: user.toJson());

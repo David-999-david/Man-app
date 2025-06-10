@@ -19,4 +19,8 @@ class AuthUsecase {
   Future<void> signOut() async {
     return await AuthRepo().signOut();
   }
+
+  Future<bool> isRealEmail(String email) async {
+    return await AuthRepo().isRealEmail(email);
+  }
 }

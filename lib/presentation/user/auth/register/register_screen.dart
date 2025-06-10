@@ -231,25 +231,28 @@ class RegisterScreen extends StatelessWidget {
                                                         .validate()) {
                                                       return;
                                                     }
-                                                    final success =
+                                                    final isRealEmail =
                                                         await provider
-                                                            .register();
-                                                    if (success) {
-                                                      AppNavigator
-                                                          .pushAndRemoveUntil(
-                                                        ChangeNotifierProvider(
-                                                          create: (_) {
-                                                            final notifier =
-                                                                UserNotifier();
-                                                            notifier
-                                                                .getUserProfile();
-                                                            return notifier;
-                                                          },
-                                                          child: HomeScreen(),
-                                                        ),
-                                                      );
-                                                    } else {
-                                                      {
+                                                            .isRealEmail();
+                                                    if (isRealEmail) {
+                                                      final success =
+                                                          await provider
+                                                              .register();
+                                                      if (success) {
+                                                        AppNavigator
+                                                            .pushAndRemoveUntil(
+                                                          ChangeNotifierProvider(
+                                                            create: (_) {
+                                                              final notifier =
+                                                                  UserNotifier();
+                                                              notifier
+                                                                  .getUserProfile();
+                                                              return notifier;
+                                                            },
+                                                            child: HomeScreen(),
+                                                          ),
+                                                        );
+                                                      } else {
                                                         ScaffoldMessenger.of(
                                                                 context)
                                                             .showSnackBar(
@@ -258,6 +261,12 @@ class RegisterScreen extends StatelessWidget {
                                                               'Register failed'),
                                                         ));
                                                       }
+                                                    } else {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(SnackBar(
+                                                              content: Text(provider
+                                                                  .errorMessage!)));
                                                     }
                                                   },
                                             child: Text(

@@ -15,6 +15,8 @@ class RegisterNotifier extends ChangeNotifier {
 
   bool isVisable = true;
 
+  String? errorMessage;
+
   void onShown() {
     if (_pssCtr.text.trim().isNotEmpty) {
       isVisable = !isVisable;
@@ -33,6 +35,21 @@ class RegisterNotifier extends ChangeNotifier {
           name: _nameCtr.text, email: _emailCtr.text, password: _pssCtr.text));
       return true;
     } catch (e) {
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> isRealEmail() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      await AuthUsecase().isRealEmail(_emailCtr.text);
+      return true;
+    } catch (e) {
+      errorMessage = e.toString().replaceFirst('Exception: ', '');
       return false;
     } finally {
       _isLoading = false;
