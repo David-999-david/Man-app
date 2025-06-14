@@ -23,4 +23,12 @@ class AuthRepo {
   Future<bool> isRealEmail(String email) {
     return AuthRemote().isRealEmail(email);
   }
+
+  Future<void> verifyEmail(String token) {
+    return AuthRemote().verifyEmail(token);
+  }
+
+  Future<bool> checkVerification(String email) {
+    return AuthRemote().checkVerification(email);
+  }
 }

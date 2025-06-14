@@ -42,20 +42,20 @@ class RegisterNotifier extends ChangeNotifier {
     }
   }
 
-  Future<bool> isRealEmail() async {
-    _isLoading = true;
-    notifyListeners();
-    try {
-      await AuthUsecase().isRealEmail(_emailCtr.text);
-      return true;
-    } catch (e) {
-      errorMessage = e.toString().replaceFirst('Exception: ', '');
-      return false;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
+  // Future<bool> isRealEmail() async {
+  //   _isLoading = true;
+  //   notifyListeners();
+  //   try {
+  //     await AuthUsecase().isRealEmail(_emailCtr.text.trim());
+  //     return true;
+  //   } catch (e) {
+  //     errorMessage = e.toString().replaceFirst('Exception: ', '');
+  //     return false;
+  //   } finally {
+  //     _isLoading = false;
+  //     notifyListeners();
+  //   }
+  // }
 
   @override
   void dispose() {

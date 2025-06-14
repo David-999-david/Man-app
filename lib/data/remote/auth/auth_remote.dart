@@ -19,6 +19,39 @@ class AuthRemote {
 
       final code = response.statusCode;
       if (code != null && code >= 200 && code < 300) {
+      } else {
+        throw Exception('Fialed status in register : ${response.statusCode}');
+      }
+    } on DioException catch (err) {
+      debugPrint(
+          'Error when register : ${(err.response?.statusCode)},${err.response?.data}');
+      rethrow;
+    }
+  }
+
+  Future<bool> isRealEmail(String email) async {
+    try {
+      final response =
+          await _dio.post(ApiUrl.checkEmail, data: {'email': email});
+      final code = response.statusCode;
+      if (code == 200 && response.data['message'] == 'ok') {
+        return true;
+      } else if (code == 400) {
+        throw Exception(response.data['error'] ?? 'Email valdation failed');
+      }
+      throw Exception('Unexpected status: $code');
+    } on DioException catch (e) {
+      final errorMsg = e.response?.data['error'] ?? 'Could not verify email';
+      throw Exception(errorMsg);
+    }
+  }
+
+  Future<void> verifyEmail(String token) async {
+    try {
+      final response =
+          await _dio.get(ApiUrl.verifyEmail, queryParameters: {'token': token});
+
+      if (response.statusCode == 200) {
         final data = response.data['data'];
         final access = data['accessToken'];
         final refresh = data['refreshToken'];
@@ -32,22 +65,26 @@ class AuthRemote {
           final local = await StorageUtils.getInstance();
           await local!.putString(LocalName.refreshToken, refresh);
         }
-      } else {
-        throw Exception('Fialed status in register : ${response.statusCode}');
       }
-    } on DioException catch (err) {
-      debugPrint(
-          'Error when register : ${(err.response?.statusCode)},${err.response?.data}');
-      rethrow;
+    } on DioException catch (e) {
+      final errorMsg = e.response?.data['error'] ?? 'Could not verify email $e';
+      throw Exception(errorMsg);
     }
   }
 
-  Future<bool> isRealEmail(String email) async {
+  Future<bool> checkVerification(String email) async {
     try {
-      await _dio.post(ApiUrl.checkEmail, data: {"email": email});
-      return true;
+      final response =
+          await _dio.get(ApiUrl.checkEmail, queryParameters: {'email': email});
+
+      if (response.statusCode == 200) {
+        final verified = response.data['verified'];
+        return verified as bool;
+      } else {
+        throw Exception(response.statusCode);
+      }
     } on DioException catch (e) {
-      final errorMsg = e.response?.data['error'] ?? 'Could not verify email';
+      final errorMsg = e.response?.data['error'] ?? 'Failed verification $e';
       throw Exception(errorMsg);
     }
   }

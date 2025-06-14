@@ -23,4 +23,12 @@ class AuthUsecase {
   Future<bool> isRealEmail(String email) async {
     return await AuthRepo().isRealEmail(email);
   }
+
+  Future<void> verifyEmail(String token) {
+    return AuthRepo().verifyEmail(token);
+  }
+
+  Future<bool> checkVerification(String email) {
+    return AuthRepo().checkVerification(email);
+  }
 }

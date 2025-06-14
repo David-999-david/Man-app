@@ -11,7 +11,12 @@ class AuthInterceptor extends Interceptor {
 
   final Dio _refreshDio;
 
-  static const _publicPaths = <String>['/signin', '/singup', '/token/refresh'];
+  static const _publicPaths = <String>[
+    '/signin',
+    '/signup',
+    '/token/refresh',
+    '/auth/check-email'
+  ];
 
   AuthInterceptor._(this._storageUtils, this._refreshDio);
 
@@ -114,9 +119,12 @@ class AuthInterceptor extends Interceptor {
         final newAccess = data['newAccess'] as String?;
         final newRefresh = data['newRefresh'] as String?;
 
-        await _storageUtils.putString(LocalName.access, newAccess!);
+        if (newAccess == null || newRefresh == null)
+          throw Exception('Invalid token response');
 
-        await _storageUtils.putString(LocalName.refreshToken, newRefresh!);
+        await _storageUtils.putString(LocalName.access, newAccess);
+
+        await _storageUtils.putString(LocalName.refreshToken, newRefresh);
 
         return true;
       }

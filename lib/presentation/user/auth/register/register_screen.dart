@@ -231,42 +231,31 @@ class RegisterScreen extends StatelessWidget {
                                                         .validate()) {
                                                       return;
                                                     }
-                                                    final isRealEmail =
+                                                    final success =
                                                         await provider
-                                                            .isRealEmail();
-                                                    if (isRealEmail) {
-                                                      final success =
-                                                          await provider
-                                                              .register();
-                                                      if (success) {
-                                                        AppNavigator
-                                                            .pushAndRemoveUntil(
-                                                          ChangeNotifierProvider(
-                                                            create: (_) {
-                                                              final notifier =
-                                                                  UserNotifier();
-                                                              notifier
-                                                                  .getUserProfile();
-                                                              return notifier;
-                                                            },
-                                                            child: HomeScreen(),
-                                                          ),
-                                                        );
-                                                      } else {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                                SnackBar(
-                                                          content: Text(
-                                                              'Register failed'),
-                                                        ));
-                                                      }
+                                                            .register();
+                                                    if (success) {
+                                                      AppNavigator
+                                                          .pushAndRemoveUntil(
+                                                        ChangeNotifierProvider(
+                                                          create: (_) {
+                                                            final notifier =
+                                                                UserNotifier();
+                                                            notifier
+                                                                .getUserProfile();
+                                                            return notifier;
+                                                          },
+                                                          child: HomeScreen(),
+                                                        ),
+                                                      );
                                                     } else {
                                                       ScaffoldMessenger.of(
                                                               context)
-                                                          .showSnackBar(SnackBar(
-                                                              content: Text(provider
-                                                                  .errorMessage!)));
+                                                          .showSnackBar(
+                                                              SnackBar(
+                                                        content: Text(
+                                                            'Register failed'),
+                                                      ));
                                                     }
                                                   },
                                             child: Text(
