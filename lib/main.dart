@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:user_auth/core/network/dio_client.dart';
+import 'package:user_auth/presentation/active/active_screen.dart';
 import 'package:user_auth/presentation/home/home_screen.dart';
 import 'package:user_auth/presentation/user/auth/login/login_screen.dart';
 import 'package:user_auth/core/theme/app_theme.dart';
 
 final GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DioClient.init();
   runApp(MyApp());
 }
 

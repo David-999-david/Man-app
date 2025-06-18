@@ -9,48 +9,51 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Home',
-            style: 21.sp(color: Color(0xFFBDBDBD)),
+    return ChangeNotifierProvider(
+      create: (context) => UserNotifier()..getUserProfile(),
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Home',
+              style: 21.sp(color: Color(0xFFBDBDBD)),
+            ),
+            centerTitle: true,
           ),
-          centerTitle: true,
-        ),
-        body: Consumer<UserNotifier>(
-          builder: (context, provider, child) {
-            if (provider.isLoading) {
-              return CircularLoading();
-            }
-            if (provider.user == null) {
+          body: Consumer<UserNotifier>(
+            builder: (context, provider, child) {
+              if (provider.isLoading) {
+                return CircularLoading();
+              }
+              if (provider.user == null) {
+                return Center(
+                  child: Text('Failed to load user,please log in again'),
+                );
+              }
               return Center(
-                child: Text('Failed to load user,please log in again'),
-              );
-            }
-            return Center(
-              child: Container(
-                decoration: BoxDecoration(color: Color(0xFF212121)),
-                child: Column(
-                  children: [
-                    Text(
-                      provider.user!.name,
-                      style: 17.sp(color: Colors.white),
-                    ),
-                    // Text(provider.user!.email),
-                    // Text(provider.user!.createdAt.toIso8601String()),
-                    ElevatedButton(
-                        onPressed: () {
-                          provider.signOut();
-                        },
-                        child: Text(
-                          'Sign out',
-                          style: 16.sp(color: Color(0xFFBDBDBD)),
-                        ))
-                  ],
+                child: Container(
+                  decoration: BoxDecoration(color: Color(0xFF212121)),
+                  child: Column(
+                    children: [
+                      Text(
+                        provider.user!.name,
+                        style: 17.sp(color: Colors.white),
+                      ),
+                      // Text(provider.user!.email),
+                      // Text(provider.user!.createdAt.toIso8601String()),
+                      ElevatedButton(
+                          onPressed: () {
+                            provider.signOut();
+                          },
+                          child: Text(
+                            'Sign out',
+                            style: 16.sp(color: Color(0xFFBDBDBD)),
+                          ))
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-        ));
+              );
+            },
+          )),
+    );
   }
 }

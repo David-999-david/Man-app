@@ -2,6 +2,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
+import 'package:user_auth/presentation/active/active_screen.dart';
+import 'package:user_auth/presentation/active/notifier/active_notifier.dart';
 import 'package:user_auth/presentation/circular_loading.dart';
 import 'package:user_auth/presentation/home/home_screen.dart';
 import 'package:user_auth/presentation/home/notifier/user_notifier.dart';
@@ -191,12 +193,9 @@ class LoginScreen extends StatelessWidget {
                                                           .pushAndRemoveUntil(
                                                               ChangeNotifierProvider(
                                                         create: (_) {
-                                                          final user =
-                                                              UserNotifier();
-                                                          user.getUserProfile();
-                                                          return user;
+                                                          ActiveNotifier();
                                                         },
-                                                        child: HomeScreen(),
+                                                        child: ActiveScreen(),
                                                       ));
                                                     } else {
                                                       ScaffoldMessenger.of(

@@ -4,36 +4,32 @@ import 'package:user_auth/core/network/auth_interceptor.dart';
 import 'package:user_auth/core/network/logger_interceptor.dart';
 
 class DioClient {
+  static late final Dio _dio;
 
-  static final DioClient _instance = DioClient._internal();
+  static Future<void> init() async {
+    final dio = Dio(BaseOptions(
+      baseUrl: ApiUrl.baseUrl,
+      headers: {'Content-Type': 'application/json'},
+      receiveTimeout: Duration(seconds: 10),
+      connectTimeout: Duration(seconds: 15),
+      sendTimeout: Duration(seconds: 15),
+      responseType: ResponseType.json,
+    ));
+    final auth = await AuthInterceptor.create();
+    dio.interceptors.add(auth);
 
-  factory DioClient() => _instance;
+    dio.interceptors.add(LoggerInterceptor());
 
-  DioClient._internal(){
-    _dio.interceptors.add(LoggerInterceptor());
-    AuthInterceptor.create().then(_dio.interceptors.add);
+    _dio = dio;
   }
 
-  final Dio _dio = Dio(BaseOptions(
-    baseUrl: ApiUrl.baseUrl,
-    headers: {'Content-Type': 'application/json'},
-    receiveTimeout: Duration(seconds: 10),
-    connectTimeout: Duration(seconds: 15),
-    sendTimeout: Duration(seconds: 15),
-    responseType: ResponseType.json,
-  ));
-
-  
-
-  // DioClient() {
-  //   _dio.interceptors.add(LoggerInterceptor());
-
-  //   AuthInterceptor.create().then((AuthInterceptor) {
-  //     _dio.interceptors.add(AuthInterceptor);
-  //   });
-  // }
-
-  Dio get dio => _dio;
+  static Dio get dio {
+    if (_dio == null) {
+      throw StateError(
+          'DioClient.init() must be called before using dioclient.dio.');
+    }
+    return _dio;
+  }
 
   Future<Response<dynamic>> onRequest(
       {required String path,

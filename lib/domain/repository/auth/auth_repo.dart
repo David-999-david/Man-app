@@ -20,15 +20,15 @@ class AuthRepo {
     return AuthRemote().signout();
   }
 
-  Future<bool> isRealEmail(String email) {
-    return AuthRemote().isRealEmail(email);
-  }
+  // Future<bool> isRealEmail(String email) {
+  //   return AuthRemote().isRealEmail(email);
+  // }
 
-  Future<void> verifyEmail(String token) {
-    return AuthRemote().verifyEmail(token);
-  }
+  // Future<void> verifyEmail(String token) {
+  //   return AuthRemote().verifyEmail(token);
+  // }
 
-  Future<bool> checkVerification(String email) {
-    return AuthRemote().checkVerification(email);
-  }
+  // Future<bool> checkVerification(String email) {
+  //   return AuthRemote().checkVerification(email);
+  // }
 }

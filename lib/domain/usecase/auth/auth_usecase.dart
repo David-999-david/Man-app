@@ -20,15 +20,15 @@ class AuthUsecase {
     return await AuthRepo().signOut();
   }
 
-  Future<bool> isRealEmail(String email) async {
-    return await AuthRepo().isRealEmail(email);
-  }
+  // Future<bool> isRealEmail(String email) async {
+  //   return await AuthRepo().isRealEmail(email);
+  // }
 
-  Future<void> verifyEmail(String token) {
-    return AuthRepo().verifyEmail(token);
-  }
+  // Future<void> verifyEmail(String token) {
+  //   return AuthRepo().verifyEmail(token);
+  // }
 
-  Future<bool> checkVerification(String email) {
-    return AuthRepo().checkVerification(email);
-  }
+  // Future<bool> checkVerification(String email) {
+  //   return AuthRepo().checkVerification(email);
+  // }
 }
