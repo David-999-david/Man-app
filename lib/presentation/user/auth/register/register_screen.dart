@@ -1,12 +1,11 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/presentation/active/active_screen.dart';
 import 'package:user_auth/presentation/active/notifier/active_notifier.dart';
-import 'package:user_auth/presentation/circular_loading.dart';
-import 'package:user_auth/presentation/home/home_screen.dart';
-import 'package:user_auth/presentation/home/notifier/user_notifier.dart';
+import 'package:user_auth/presentation/user/auth/login/login_screen.dart';
 import 'package:user_auth/presentation/user/auth/register/notifier/register_notifier.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
 
@@ -23,7 +22,13 @@ class RegisterScreen extends StatelessWidget {
           child: Consumer<RegisterNotifier>(
             builder: (context, provider, child) {
               return provider.isLoading
-                  ? CircularLoading()
+                  ? Center(
+                      child: SpinKitWave(
+                        color: Colors.red,
+                        size: 30,
+                        duration: Duration(seconds: 10),
+                      ),
+                    )
                   : Container(
                       width: double.infinity,
                       padding:
@@ -124,8 +129,9 @@ class RegisterScreen extends StatelessWidget {
                                             // labelStyle: 15.sp(),
                                             hintText: 'example@gmail.com',
                                             hintStyle: 15.sp(),
+                                            errorText: provider.emailErr,
                                             errorStyle:
-                                                15.sp(color: Colors.red),
+                                                13.sp(color: Colors.red),
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                                     horizontal: 14,
@@ -205,6 +211,8 @@ class RegisterScreen extends StatelessWidget {
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
                                             return 'Please enter your password';
+                                          } else if (value.length < 6) {
+                                            return 'Password length is less than 6';
                                           }
                                           return null;
                                         },
@@ -261,6 +269,37 @@ class RegisterScreen extends StatelessWidget {
                                               style: 15.sp(),
                                             )),
                                       ),
+                                    ),
+                                    SizedBox(
+                                      height: 14,
+                                    ),
+                                    Center(
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            AppNavigator.push(
+                                                context, LoginScreen());
+                                          },
+                                          child: RichText(
+                                            text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                      text:
+                                                          'Already have an account-',
+                                                      style: 13.sp(
+                                                          color: Color(
+                                                              0xFFFFAB91))),
+                                                  TextSpan(
+                                                      text: 'Log-in!',
+                                                      style: 15
+                                                          .sp(
+                                                              color: Color(
+                                                                  0xFFFFAB91))
+                                                          .copyWith(
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .underline))
+                                                ]),
+                                          )),
                                     )
                                   ],
                                 ))

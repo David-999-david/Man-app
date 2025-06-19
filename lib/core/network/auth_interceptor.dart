@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:user_auth/common/constant/api_url.dart';
 import 'package:user_auth/common/constant/local_name.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
-import 'package:user_auth/core/network/storage_utils.dart';
 import 'package:user_auth/presentation/user/auth/login/login_screen.dart';
 
 class AuthInterceptor extends Interceptor {
-  final StorageUtils _storageUtils;
+  final FlutterSecureStorage _storageUtils;
 
   final Dio _refreshDio;
 
@@ -22,7 +22,7 @@ class AuthInterceptor extends Interceptor {
   AuthInterceptor._(this._storageUtils, this._refreshDio);
 
   static Future<AuthInterceptor> create() async {
-    final storage = await StorageUtils.getInstance();
+    final storage = await FlutterSecureStorage();
     final refreshDio = Dio(BaseOptions(
         baseUrl: ApiUrl.baseUrl,
         headers: {'Content-Type': 'application/json'}));
@@ -45,15 +45,15 @@ class AuthInterceptor extends Interceptor {
       return handler.next(options);
     }
 
-    String? refreshTok = await _storageUtils.getString(LocalName.refreshToken);
-    debugPrint('This is refresh from local => $refreshTok');
-    if (refreshTok == null || refreshTok.isEmpty || _isJwtExpired(refreshTok)) {
-      debugPrint('Refresh token invalid or expired');
-      await _handleSessionExpired(options, reqHandler: handler);
-      return;
-    }
+    // String? refreshTok = await _storageUtils.getString(LocalName.refreshToken);
+    // debugPrint('This is refresh from local => $refreshTok');
+    // if (refreshTok == null || refreshTok.isEmpty || _isJwtExpired(refreshTok)) {
+    //   debugPrint('Refresh token invalid or expired');
+    //   await _handleSessionExpired(options, reqHandler: handler);
+    //   return;
+    // }
 
-    String? access = await _storageUtils.getString(LocalName.access);
+    String? access = await _storageUtils.read(key: LocalName.access);
     debugPrint('This is access from local => $access');
     if (access == null || access.isEmpty || _isJwtExpired(access)) {
       debugPrint('Access token is invalid or expired');
@@ -62,7 +62,7 @@ class AuthInterceptor extends Interceptor {
         await _handleSessionExpired(options, reqHandler: handler);
         return;
       }
-      access = await _storageUtils.getString(LocalName.access);
+      access = await _storageUtils.read(key: LocalName.access);
       debugPrint('New access token after refresh : $access');
     }
 
@@ -79,9 +79,8 @@ class AuthInterceptor extends Interceptor {
   Future<void> _handleSessionExpired(RequestOptions options,
       {RequestInterceptorHandler? reqHandler,
       ErrorInterceptorHandler? errHandler}) async {
-    final local = await StorageUtils.getInstance();
-    await local!.remove(LocalName.access);
-    await local!.remove(LocalName.refreshToken);
+    await _storageUtils!.delete(key: LocalName.access);
+    await _storageUtils!.delete(key: LocalName.refreshToken);
     AppNavigator.pushAndRemoveUntil(LoginScreen());
     final dioException = DioException(
         requestOptions: options,
@@ -103,10 +102,13 @@ class AuthInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
+    if (_publicPaths.any((p) => err.requestOptions.path.endsWith(p))) {
+      return handler.next(err);
+    }
     if (err.response?.statusCode == 401 && err.error != 'SESSION_EXPIRED') {
       final refresh = await _refresh();
       if (refresh) {
-        final access = await _storageUtils.getString(LocalName.access);
+        final access = await _storageUtils.read(key: LocalName.access);
         if (access != null && access.isNotEmpty) {
           err.requestOptions.headers['Authorization'] = 'Bearer $access';
           debugPrint('Retrying with New Authorization header: Bearer $access');
@@ -121,7 +123,8 @@ class AuthInterceptor extends Interceptor {
             debugPrint('Retry successful: ${retry.statusCode}');
             return handler.resolve(retry);
           } on DioException catch (e) {
-            debugPrint('Retry failed: ${e.response?.statusCode}, ${e.response?.data}');
+            debugPrint(
+                'Retry failed: ${e.response?.statusCode}, ${e.response?.data}');
             return handler.next(e);
           }
         }
@@ -135,15 +138,14 @@ class AuthInterceptor extends Interceptor {
   }
 
   Future<bool> _refresh() async {
-    final token = await _storageUtils.getString(LocalName.refreshToken);
+    final token = await _storageUtils.read(key: LocalName.refreshToken);
     debugPrint('Start refresh new with $token');
     if (token == null || token.isEmpty) return false;
 
     try {
-      final response =
-          await _refreshDio.post(ApiUrl.refresh, data: {'refreshToken': token},
-          options: Options(headers: {'Content-Type' : 'application/json'})
-          );
+      final response = await _refreshDio.post(ApiUrl.refresh,
+          data: {'refreshToken': token},
+          options: Options(headers: {'Content-Type': 'application/json'}));
       debugPrint('Response code => ${response.statusCode}');
       if (response.statusCode == 201) {
         final data = response.data as Map<String, dynamic>;
@@ -156,9 +158,10 @@ class AuthInterceptor extends Interceptor {
           throw Exception('Invalid token response');
         }
 
-        await _storageUtils.putString(LocalName.access, newAccess);
+        await _storageUtils.write(key: LocalName.access, value: newAccess);
 
-        await _storageUtils.putString(LocalName.refreshToken, newRefresh);
+        await _storageUtils.write(
+            key: LocalName.refreshToken, value: newRefresh);
         debugPrint('Refresh successful!');
 
         return true;

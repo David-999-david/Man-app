@@ -1,12 +1,10 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/presentation/active/active_screen.dart';
 import 'package:user_auth/presentation/active/notifier/active_notifier.dart';
-import 'package:user_auth/presentation/circular_loading.dart';
-import 'package:user_auth/presentation/home/home_screen.dart';
-import 'package:user_auth/presentation/home/notifier/user_notifier.dart';
 import 'package:user_auth/presentation/user/auth/login/notifier/login_notifier.dart';
 import 'package:user_auth/presentation/user/auth/register/register_screen.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
@@ -24,7 +22,12 @@ class LoginScreen extends StatelessWidget {
           child: Consumer<LoginNotifier>(
             builder: (context, provider, child) {
               return provider.isLoading
-                  ? CircularLoading()
+                  ? Center(
+                      child: SpinKitWave(
+                        color: Colors.red,
+                        size: 30,
+                      ),
+                    )
                   : Container(
                       width: double.infinity,
                       padding:
@@ -76,8 +79,9 @@ class LoginScreen extends StatelessWidget {
                                             // labelStyle: 15.sp(),
                                             hintText: 'example@gmail.com',
                                             hintStyle: 15.sp(),
+                                            errorText: provider.emailErr,
                                             errorStyle:
-                                                15.sp(color: Colors.red),
+                                                13.sp(color: Colors.red),
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                                     horizontal: 14,
@@ -129,8 +133,11 @@ class LoginScreen extends StatelessWidget {
                                             // labelStyle: 15.sp(),
                                             hintText: 'Enter password',
                                             hintStyle: 15.sp(),
+                                            // error: Text(
+                                            //     provider.errMsg.toString()),
+                                            errorText: provider.pswErr,
                                             errorStyle:
-                                                15.sp(color: Colors.red),
+                                                13.sp(color: Colors.red),
                                             suffixIcon: IconButton(
                                                 color: Colors.black,
                                                 iconSize: 20,
