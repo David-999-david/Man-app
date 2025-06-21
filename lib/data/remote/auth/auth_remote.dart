@@ -163,4 +163,20 @@ class AuthRemote {
 
     AppNavigator.pushAndRemoveUntil(LoginScreen());
   }
+
+  Future<String> sendEmailOtp(String email) async {
+    try {
+      final response =
+          await _dio.post(ApiUrl.sendEmailOtp, data: {'email': email});
+      final status = response.statusCode;
+      if (status! >= 200 && status < 300) {
+        final message = response.data['message'];
+        return message;
+      } else {
+        throw Exception('Unknown Error => ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      throw Exception('Error when sendemail otp => ${e.response?.statusCode}');
+    }
+  }
 }

@@ -13,6 +13,14 @@ class ApiUrl {
 
   static const refresh = '/token/refresh';
 
+  static const sendEmailOtp = '/request-otp';
+
+  static const resendOtp = '/resend-otp';
+
+  static const verifyOtp = '/verify-otp';
+
+  static const changePsw = '/reset-password';
+
   // static const checkEmail = '/auth/check-email';
 
   // static const verifyEmail = '/verify-email';

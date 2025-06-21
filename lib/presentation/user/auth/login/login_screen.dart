@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/presentation/active/active_screen.dart';
 import 'package:user_auth/presentation/active/notifier/active_notifier.dart';
+import 'package:user_auth/presentation/user/auth/forgot_password/forgot_password.dart';
 import 'package:user_auth/presentation/user/auth/login/notifier/login_notifier.dart';
 import 'package:user_auth/presentation/user/auth/register/register_screen.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
@@ -167,6 +168,23 @@ class LoginScreen extends StatelessWidget {
                                           }
                                           return null;
                                         },
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 15),
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: InkWell(
+                                          onTap: () {
+                                            AppNavigator.push(
+                                                context, ForgotPassword());
+                                          },
+                                          child: Text(
+                                            'Forgot password?',
+                                            style:
+                                                12.sp(color: Color(0xFFFFAB91)),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     Center(

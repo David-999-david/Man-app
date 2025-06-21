@@ -79,7 +79,7 @@ class RegisterScreen extends StatelessWidget {
                                             hintText: 'Enter your name',
                                             hintStyle: 15.sp(),
                                             errorStyle:
-                                                15.sp(color: Colors.red),
+                                                13.sp(color: Colors.red),
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                                     horizontal: 14,

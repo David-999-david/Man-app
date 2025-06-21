@@ -31,4 +31,8 @@ class AuthRepo {
   // Future<bool> checkVerification(String email) {
   //   return AuthRemote().checkVerification(email);
   // }
+
+  Future<String> sendEmailOtp(String email) {
+    return AuthRemote().sendEmailOtp(email);
+  }
 }
