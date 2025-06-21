@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/presentation/active/active_screen.dart';
 import 'package:user_auth/presentation/active/notifier/active_notifier.dart';
+import 'package:user_auth/presentation/dv_logo.dart';
 import 'package:user_auth/presentation/user/auth/forgot_password/forgot_password.dart';
 import 'package:user_auth/presentation/user/auth/login/notifier/login_notifier.dart';
 import 'package:user_auth/presentation/user/auth/register/register_screen.dart';
@@ -39,18 +40,7 @@ class LoginScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CircleAvatar(
-                              radius: 40,
-                              backgroundColor: Colors.white,
-                              child: ClipOval(
-                                child: Image.asset(
-                                  height: 75,
-                                  width: 75,
-                                  'assets/images/DV.png',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
+                            DvLogo(),
                             Form(
                                 key: formKey,
                                 child: Column(

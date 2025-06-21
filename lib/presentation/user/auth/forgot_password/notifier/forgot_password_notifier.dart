@@ -24,7 +24,8 @@ class ForgotPasswordNotifier extends ChangeNotifier {
     _loading = false;
     notifyListeners();
     try {
-      _msg = await AuthUsecase().sendEmailOtp(_emailCtrl.text);
+      _msg =
+          await AuthUsecase().sendEmailOtp(_emailCtrl.text.toString().trim());
     } catch (e) {
       throw Exception('$e');
     }
