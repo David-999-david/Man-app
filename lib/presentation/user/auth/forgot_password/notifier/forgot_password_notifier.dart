@@ -8,6 +8,10 @@ class ForgotPasswordNotifier extends ChangeNotifier {
 
   TextEditingController get emailCtrl => _emailCtrl;
 
+  bool _success = false;
+
+  bool get success => _success;
+
   String? _msg;
 
   String? get msg => _msg;
@@ -21,13 +25,26 @@ class ForgotPasswordNotifier extends ChangeNotifier {
   bool get loading => _loading;
 
   Future<void> sendEmailOtp() async {
-    _loading = false;
+    _loading = true;
+    _errmsg = null;
     notifyListeners();
     try {
       _msg =
           await AuthUsecase().sendEmailOtp(_emailCtrl.text.toString().trim());
+      _success = true;
+      notifyListeners();
     } catch (e) {
-      throw Exception('$e');
+      _success = false;
+      _errmsg = e.toString();
+    } finally {
+      _loading = false;
+      notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    _emailCtrl.dispose();
+    super.dispose();
   }
 }

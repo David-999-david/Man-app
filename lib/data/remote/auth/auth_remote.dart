@@ -168,15 +168,35 @@ class AuthRemote {
     try {
       final response =
           await _dio.post(ApiUrl.sendEmailOtp, data: {'email': email});
-      final status = response.statusCode;
-      if (status! >= 200 && status < 300) {
+      final status = response.statusCode!;
+      if (status >= 200 && status < 300) {
         final message = response.data['message'];
         return message;
       } else {
-        throw Exception('Unknown Error => ${response.statusCode}');
+        final err = response.data['error'] ?? 'Unknown error';
+        throw err;
       }
     } on DioException catch (e) {
-      throw Exception('Error when sendemail otp => ${e.response?.statusCode}');
+      throw '${e.response?.data['error']}';
+    }
+  }
+
+  Future<String> verifyOtp(String email, String otp) async {
+    try {
+      final response =
+          await _dio.post(ApiUrl.verifyOtp, data: {'email': email, 'otp': otp});
+
+      if (response.statusCode! >= 200 && response.statusCode! < 300) {
+        final resetToken = response.data['resetToken'];
+        await _store.write(key: LocalName.resetToken, value: resetToken);
+        final message = response.data['message'];
+        return message;
+      } else {
+        final errmsg = response.data['error'] ?? 'Unknown error';
+        throw errmsg;
+      }
+    } on DioException catch (e) {
+      throw e.response?.data['error'];
     }
   }
 }

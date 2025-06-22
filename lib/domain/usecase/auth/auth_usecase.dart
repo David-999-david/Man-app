@@ -35,4 +35,8 @@ class AuthUsecase {
   Future<String> sendEmailOtp(String email) async {
     return await AuthRepo().sendEmailOtp(email);
   }
+
+  Future<String> verifyOtp(String email, String otp) async {
+    return await AuthRepo().verifyOtp(email, otp);
+  }
 }
