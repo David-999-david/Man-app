@@ -1,11 +1,11 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/presentation/active/active_screen.dart';
 import 'package:user_auth/presentation/active/notifier/active_notifier.dart';
 import 'package:user_auth/presentation/dv_logo.dart';
+import 'package:user_auth/presentation/loading_show.dart';
 import 'package:user_auth/presentation/user/auth/forgot_password/forgot_password.dart';
 import 'package:user_auth/presentation/user/auth/login/notifier/login_notifier.dart';
 import 'package:user_auth/presentation/user/auth/register/register_screen.dart';
@@ -24,12 +24,7 @@ class LoginScreen extends StatelessWidget {
           child: Consumer<LoginNotifier>(
             builder: (context, provider, child) {
               return provider.isLoading
-                  ? Center(
-                      child: SpinKitWave(
-                        color: Colors.red,
-                        size: 30,
-                      ),
-                    )
+                  ? LoadingShow()
                   : Container(
                       width: double.infinity,
                       padding:

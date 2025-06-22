@@ -17,7 +17,10 @@ class AuthInterceptor extends Interceptor {
     '/signup',
     '/token/refresh',
     '/auth/check-email',
-    '/request-otp'
+    '/request-otp',
+    '/verify-otp',
+    '/resend-otp',
+    '/reset-password'
   ];
 
   AuthInterceptor._(this._storageUtils, this._refreshDio);

@@ -13,27 +13,34 @@ class VerifyOtpNotifier extends ChangeNotifier {
   bool _success = false;
   bool get success => _success;
 
-  final TextEditingController _codeCtrl = TextEditingController();
-  TextEditingController get codeCtrl => _codeCtrl;
+  // final TextEditingController _codeCtrl = TextEditingController();
+  // TextEditingController get codeCtrl => _codeCtrl;
+
+  String _pin = '';
+  String get pin => _pin;
+
+  void updatePin(String value) {
+    _pin = value;
+    notifyListeners();
+  }
+
+  String? _errMsg;
+  String? get errMsg => _errMsg;
 
   Future<void> verifyOtp() async {
     _loading = true;
+    _errMsg = null;
     notifyListeners();
     try {
-      _msg = await AuthUsecase().verifyOtp(email, _codeCtrl.text);
+      _msg = await AuthUsecase().verifyOtp(email, _pin);
       _success = true;
     } catch (e) {
       _success = false;
-      throw Exception('$e');
+      _errMsg = e.toString();
     } finally {
       _loading = false;
+      
       notifyListeners();
     }
-  }
-
-  @override
-  void dispose() {
-    _codeCtrl.dispose();
-    super.dispose();
   }
 }

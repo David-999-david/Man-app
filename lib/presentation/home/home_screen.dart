@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
-import 'package:user_auth/presentation/circular_loading.dart';
+import 'package:user_auth/presentation/loading_show.dart';
 import 'package:user_auth/presentation/home/notifier/user_notifier.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
           body: Consumer<UserNotifier>(
             builder: (context, provider, child) {
               if (provider.isLoading) {
-                return CircularLoading();
+                return LoadingShow();
               }
               if (provider.user == null) {
                 return Center(
