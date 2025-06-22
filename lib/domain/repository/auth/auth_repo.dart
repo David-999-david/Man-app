@@ -39,4 +39,8 @@ class AuthRepo {
   Future<String> verifyOtp(String email, String otp) {
     return AuthRemote().verifyOtp(email, otp);
   }
+
+  Future<String> changePassword(String newPsw) {
+    return AuthRemote().changePassword(newPsw);
+  }
 }

@@ -188,11 +188,38 @@ class AuthRemote {
 
       if (response.statusCode! >= 200 && response.statusCode! < 300) {
         final resetToken = response.data['resetToken'];
+        debugPrint('This is reset Token from server => $resetToken');
         await _store.write(key: LocalName.resetToken, value: resetToken);
+
+        final localReset = await _store.read(key: LocalName.resetToken);
+        debugPrint('This is reset Token in local => $localReset');
+
         final message = response.data['message'];
         return message;
       } else {
         final errmsg = response.data['error'] ?? 'Unknown error';
+        throw errmsg;
+      }
+    } on DioException catch (e) {
+      throw e.response?.data['error'];
+    }
+  }
+
+  Future<String> changePassword(String newPsw) async {
+    try {
+      final localReset = await _store.read(key: LocalName.resetToken);
+      debugPrint('This is reset token from local => $localReset');
+
+      final response = await _dio.post(ApiUrl.changePsw,
+          data: {'resetToken': localReset, 'newPsw': newPsw});
+
+      final status = response.statusCode!;
+
+      if (status >= 200 && status < 300) {
+        final msg = response.data['message'];
+        return msg;
+      } else {
+        final errmsg = response.data['error'];
         throw errmsg;
       }
     } on DioException catch (e) {
