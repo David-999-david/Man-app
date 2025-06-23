@@ -146,12 +146,21 @@ class ForgotPassword extends StatelessWidget {
                                                 provider.success
                                                     ? AppNavigator.push(
                                                         context,
-                                                        ChangeNotifierProvider(
-                                                          create: (_) =>
-                                                              VerifyOtpNotifier(
-                                                                  provider
-                                                                      .emailCtrl
-                                                                      .text),
+                                                        MultiProvider(
+                                                          providers: [
+                                                            ChangeNotifierProvider(
+                                                              create: (context) =>
+                                                                  VerifyOtpNotifier(
+                                                                provider
+                                                                    .emailCtrl
+                                                                    .text,
+                                                              ),
+                                                            ),
+                                                            ChangeNotifierProvider
+                                                                .value(
+                                                              value: provider,
+                                                            ),
+                                                          ],
                                                           child: VerifyOtp(),
                                                         ))
                                                     : null;

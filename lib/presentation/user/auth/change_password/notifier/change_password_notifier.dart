@@ -20,8 +20,13 @@ class ChangePasswordNotifier extends ChangeNotifier {
   String? _errMsg;
   String? get errMsg => _errMsg;
 
-  String? validateNewPsw(String value) {
-    if (value.isEmpty) {
+  final key = GlobalKey<FormState>();
+
+  final newPswKey = GlobalKey<FormFieldState>();
+  final confirmPswKey = GlobalKey<FormFieldState>();
+
+  String? validateNewPsw(String? value) {
+    if (value == null || value.isEmpty) {
       return 'Password can\'t be empty';
     }
     if (value.length < 6) {
@@ -30,8 +35,8 @@ class ChangePasswordNotifier extends ChangeNotifier {
     return null;
   }
 
-  String? validateConfirmPsw(String value) {
-    if (value.isEmpty) {
+  String? validateConfirmPsw(String? value) {
+    if (value == null || value.isEmpty) {
       return 'Password can\'t be empty';
     }
     if (value.length < 6) {
@@ -43,13 +48,15 @@ class ChangePasswordNotifier extends ChangeNotifier {
     return null;
   }
 
-  void changePassword() async {
+  Future<void> changePassword() async {
     _loading = true;
     _errMsg = null;
     _msg = null;
     notifyListeners();
     try {
       _msg = await AuthUsecase().changePassword(confirmPsw.text);
+      _newPsw.clear();
+      _confirmPsw.clear();
       _success = true;
     } catch (e) {
       _success = false;

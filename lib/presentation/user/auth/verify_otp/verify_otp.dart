@@ -5,6 +5,7 @@ import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
 import 'package:user_auth/presentation/loading_show.dart';
 import 'package:user_auth/presentation/user/auth/change_password/change_password.dart';
+import 'package:user_auth/presentation/user/auth/forgot_password/notifier/forgot_password_notifier.dart';
 import 'package:user_auth/presentation/user/auth/verify_otp/notifier/verify_otp_notifier.dart';
 
 class VerifyOtp extends StatelessWidget {
@@ -12,8 +13,8 @@ class VerifyOtp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<VerifyOtpNotifier>(
-      builder: (context, otp, child) {
+    return Consumer2<VerifyOtpNotifier, ForgotPasswordNotifier>(
+      builder: (context, otp, forpsw, child) {
         return otp.loading
             ? LoadingShow()
             : Scaffold(
@@ -82,6 +83,22 @@ class VerifyOtp extends StatelessWidget {
                             },
                           ),
                         ),
+                        OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                                backgroundColor: Color(0xFFBDBDBD),
+                                fixedSize: Size(80, 32),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 3),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                side: BorderSide(color: Colors.white)),
+                            onPressed: () {
+                              forpsw.sendEmailOtp();
+                            },
+                            child: Text(
+                              'Re-send',
+                              style: 15.sp(),
+                            ))
                       ],
                     ),
                   ),
