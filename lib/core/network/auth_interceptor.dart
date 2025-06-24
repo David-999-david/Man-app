@@ -13,14 +13,14 @@ class AuthInterceptor extends Interceptor {
   final Dio _refreshDio;
 
   static const _publicPaths = <String>[
-    '/signin',
-    '/signup',
-    '/token/refresh',
-    '/auth/check-email',
-    '/request-otp',
-    '/verify-otp',
-    '/resend-otp',
-    '/reset-password'
+    'auth/signin',
+    'auth/signup',
+    'auth/token/refresh',
+    'auth/auth/check-email',
+    'auth/request-otp',
+    'auth/verify-otp',
+    'auth/resend-otp',
+    'auth/reset-password'
   ];
 
   AuthInterceptor._(this._storageUtils, this._refreshDio);
