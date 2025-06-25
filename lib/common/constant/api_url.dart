@@ -31,5 +31,5 @@ class ApiUrl {
 
   static const removeTodo = 'todos/';
 
-  static const removeAl = 'todos/';
+  static const removeAll = 'todos/';
 }

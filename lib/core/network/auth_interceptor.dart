@@ -30,7 +30,7 @@ class AuthInterceptor extends Interceptor {
     final refreshDio = Dio(BaseOptions(
         baseUrl: ApiUrl.baseUrl,
         headers: {'Content-Type': 'application/json'}));
-    return AuthInterceptor._(storage!, refreshDio);
+    return AuthInterceptor._(storage, refreshDio);
   }
 
   bool _isJwtExpired(String? token) {

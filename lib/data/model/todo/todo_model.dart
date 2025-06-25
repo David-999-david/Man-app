@@ -25,17 +25,6 @@ class TodoModel {
   }
 }
 
-class AddTodo {
-  final String title;
-  final String description;
-
-  AddTodo({required this.title, required this.description});
-
-  Map<String, dynamic> toJson() {
-    return {'title': title, 'description': description};
-  }
-}
-
 class PaginationTodo {
   final List<TodoModel> todos;
   final int limit;
@@ -54,12 +43,39 @@ class PaginationTodo {
     final rawsList = json['data'] as List<dynamic>;
     final todo = rawsList.map((t) => TodoModel.fromJson(t)).toList();
 
-    final meta = json['meta'] as Map<String,dynamic>;
+    final meta = json['meta'] as Map<String, dynamic>;
     return PaginationTodo(
         todos: todo,
         limit: meta['limit'] as int,
         page: meta['page'] as int,
         total: meta['total'] as int,
         totalPages: meta['totalPages'] as int);
+  }
+}
+
+class AddTodo {
+  final String title;
+  final String description;
+  final bool completed;
+
+  AddTodo(
+      {required this.title,
+      required this.description,
+      required this.completed});
+
+  Map<String, dynamic> toJson() {
+    return {'title': title, 'description': description, 'completed': completed};
+  }
+}
+
+class EdiitTodo {
+  final String? title;
+  final String? description;
+  final bool? completed;
+
+  EdiitTodo({this.title, this.description, this.completed});
+
+  Map<String, dynamic> toJson() {
+    return {'title': title, 'description': description, 'completed': completed};
   }
 }
