@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
-import 'package:user_auth/presentation/loading_show.dart';
-import 'package:user_auth/presentation/home/notifier/user_notifier.dart';
+import 'package:user_auth/presentation/widgets/loading_show.dart';
+import 'package:user_auth/presentation/userProfile/notifier/user_notifier.dart';
 
 class UserProfile extends StatelessWidget {
   const UserProfile({super.key});

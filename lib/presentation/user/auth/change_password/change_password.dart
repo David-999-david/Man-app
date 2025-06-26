@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
-import 'package:user_auth/presentation/loading_show.dart';
+import 'package:user_auth/presentation/widgets/loading_show.dart';
 import 'package:user_auth/presentation/user/auth/change_password/notifier/change_password_notifier.dart';
 import 'package:user_auth/presentation/user/auth/login/login_screen.dart';
 

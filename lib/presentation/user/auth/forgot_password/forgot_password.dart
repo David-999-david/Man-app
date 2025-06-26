@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
-import 'package:user_auth/presentation/dv_logo.dart';
+import 'package:user_auth/presentation/widgets/dv_logo.dart';
 import 'package:user_auth/presentation/user/auth/forgot_password/notifier/forgot_password_notifier.dart';
 import 'package:user_auth/presentation/user/auth/login/login_screen.dart';
 import 'package:user_auth/presentation/user/auth/verify_otp/notifier/verify_otp_notifier.dart';

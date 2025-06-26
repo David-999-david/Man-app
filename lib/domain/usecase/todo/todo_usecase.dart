@@ -1,0 +1,28 @@
+import 'package:user_auth/data/model/todo/todo_model.dart';
+import 'package:user_auth/domain/repository/todo/todo_repository.dart';
+
+class TodoUsecase {
+  Future<TodoModel> addTodo(AddTodo todo) async {
+    return await TodoRepository().addTodo(todo);
+  }
+
+  Future<PaginationTodo> getAllTodo(String? query, int page, int limit) async {
+    return await TodoRepository().getAllTodo(query, page, limit);
+  }
+
+  Future<TodoModel> getTodoById(int id) async {
+    return await TodoRepository().getTodoById(id);
+  }
+
+  Future<TodoModel> editTodo(int id, EdiitTodo todo) async {
+    return await TodoRepository().editTodo(id, todo);
+  }
+
+  Future<String> removeById(int id) async {
+    return await TodoRepository().removeById(id);
+  }
+
+  Future<String> removeAll() async {
+    return await TodoRepository().removeAll();
+  }
+}

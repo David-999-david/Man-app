@@ -29,6 +29,7 @@ class PaginationTodo {
   final List<TodoModel> todos;
   final int limit;
   final int page;
+  final int itemCounts;
   final int total;
   final int totalPages;
 
@@ -36,6 +37,7 @@ class PaginationTodo {
       {required this.todos,
       required this.limit,
       required this.page,
+      required this.itemCounts,
       required this.total,
       required this.totalPages});
 
@@ -48,8 +50,9 @@ class PaginationTodo {
         todos: todo,
         limit: meta['limit'] as int,
         page: meta['page'] as int,
-        total: meta['total'] as int,
-        totalPages: meta['totalPages'] as int);
+        itemCounts: meta['itemCounts'] as int,
+        total: meta['totalCounts'] as int,
+        totalPages: meta['totalPage'] as int);
   }
 }
 
