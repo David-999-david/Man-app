@@ -26,7 +26,7 @@ class AuthInterceptor extends Interceptor {
   AuthInterceptor._(this._storageUtils, this._refreshDio);
 
   static Future<AuthInterceptor> create() async {
-    final storage = await FlutterSecureStorage();
+    final storage = FlutterSecureStorage();
     final refreshDio = Dio(BaseOptions(
         baseUrl: ApiUrl.baseUrl,
         headers: {'Content-Type': 'application/json'}));
@@ -83,8 +83,8 @@ class AuthInterceptor extends Interceptor {
   Future<void> _handleSessionExpired(RequestOptions options,
       {RequestInterceptorHandler? reqHandler,
       ErrorInterceptorHandler? errHandler}) async {
-    await _storageUtils!.delete(key: LocalName.access);
-    await _storageUtils!.delete(key: LocalName.refreshToken);
+    await _storageUtils.delete(key: LocalName.access);
+    await _storageUtils.delete(key: LocalName.refreshToken);
     AppNavigator.pushAndRemoveUntil(LoginScreen());
     final dioException = DioException(
         requestOptions: options,
