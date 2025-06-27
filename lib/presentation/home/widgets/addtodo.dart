@@ -29,34 +29,57 @@ class Addtodo extends StatelessWidget {
                           ),
                           _textFormField(
                               notifier.descCtrl, 'Description', 'Description'),
-                          Center(
-                            child: OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                    backgroundColor: Color(0xFFBDBDBD),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 3),
-                                    side: BorderSide(color: Colors.white),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    fixedSize: Size(80, 32)),
-                                onPressed: () async {
-                                  if (notifier.key.currentState!.validate()) {
-                                    final success = await notifier.addNew();
-                                    if (success) {
-                                      AppNavigator.pop(context, success);
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content:
-                                                  Text('Failed to add new')));
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                      backgroundColor: Color(0xFFBDBDBD),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 3),
+                                      side: BorderSide(color: Colors.white),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      fixedSize: Size(80, 32)),
+                                  onPressed: () {
+                                    AppNavigator.pop(context);
+                                  },
+                                  child: Text(
+                                    'Back',
+                                    style: 15.sp(),
+                                  )),
+                              OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                      backgroundColor: Color(0xFFBDBDBD),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 3),
+                                      side: BorderSide(color: Colors.white),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      fixedSize: Size(80, 32)),
+                                  onPressed: () async {
+                                    if (notifier.key.currentState!.validate()) {
+                                      final success = await notifier.addNew();
+                                      if (success) {
+                                        AppNavigator.pop(context, success);
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content:
+                                                    Text('Failed to add new')));
+                                      }
                                     }
-                                  }
-                                },
-                                child: Text(
-                                  'OK',
-                                  style: 15.sp(),
-                                )),
+                                  },
+                                  child: Text(
+                                    'OK',
+                                    style: 15.sp(),
+                                  )),
+                            ],
                           )
                         ],
                       ),

@@ -4,6 +4,10 @@ import 'package:user_auth/data/model/todo/todo_model.dart';
 import 'package:user_auth/domain/usecase/todo/todo_usecase.dart';
 
 class HomeNotifier extends ChangeNotifier {
+  HomeNotifier({this.editTodo});
+
+  TodoModel? editTodo;
+
   bool _loading = false;
   bool get loading => _loading;
 
@@ -169,6 +173,46 @@ class HomeNotifier extends ChangeNotifier {
       _todoList.removeWhere((todo) => selectedId.contains(todo.id));
       _selectedId.clear();
       _selectedTodo.clear();
+      return true;
+    } catch (e) {
+      _msg = e.toString();
+      return false;
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+  }
+
+  bool? _completed;
+  bool? get completed => _completed;
+
+  void getOld() {
+    if (editTodo != null) {
+      titleCtrl.text = editTodo!.title;
+      descCtrl.text = editTodo!.description;
+      _completed = editTodo!.completed;
+    }
+  }
+
+  Future<bool> onEditTodo() async {
+    _msg = null;
+    _loading = true;
+    notifyListeners();
+    try {
+      final editedTodo = await TodoUsecase().editTodo(
+          editTodo!.id,
+          EdiitTodo(
+              title: titleCtrl.text,
+              description: descCtrl.text,
+              completed: _completed));
+      final editTodoIndex =
+          _todoList.indexWhere((todo) => todo.id == editedTodo.id);
+      if (editTodoIndex != -1) {
+        _todoList[editTodoIndex] = editedTodo;
+      }
+      titleCtrl.clear();
+      descCtrl.clear();
+
       return true;
     } catch (e) {
       _msg = e.toString();
