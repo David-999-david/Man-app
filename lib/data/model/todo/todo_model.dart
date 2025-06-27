@@ -59,15 +59,14 @@ class PaginationTodo {
 class AddTodo {
   final String title;
   final String description;
-  final bool completed;
 
-  AddTodo(
-      {required this.title,
-      required this.description,
-      required this.completed});
+  AddTodo({
+    required this.title,
+    required this.description,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'title': title, 'description': description, 'completed': completed};
+    return {'title': title, 'description': description};
   }
 }
 

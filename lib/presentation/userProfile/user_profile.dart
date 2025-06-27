@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
-import 'package:user_auth/presentation/widgets/loading_show.dart';
 import 'package:user_auth/presentation/userProfile/notifier/user_notifier.dart';
+import 'package:user_auth/presentation/widgets/loading_show.dart';
 
 class UserProfile extends StatelessWidget {
   const UserProfile({super.key});
@@ -11,49 +11,107 @@ class UserProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => UserNotifier()..getUserProfile(),
-      child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'Home',
-              style: 21.sp(color: Color(0xFFBDBDBD)),
-            ),
-            centerTitle: true,
-          ),
-          body: Consumer<UserNotifier>(
-            builder: (context, provider, child) {
-              if (provider.isLoading) {
-                return LoadingShow();
-              }
-              if (provider.user == null) {
-                return Center(
-                  child: Text('Failed to load user,please log in again'),
-                );
-              }
-              return Center(
-                child: Container(
-                  decoration: BoxDecoration(color: Color(0xFF212121)),
-                  child: Column(
-                    children: [
-                      Text(
-                        provider.user!.name,
-                        style: 17.sp(color: Colors.white),
+      child: Consumer<UserNotifier>(
+        builder: (context, notifier, child) {
+          return Scaffold(
+            backgroundColor: Colors.blueGrey,
+            body: notifier.isLoading
+                ? LoadingShow()
+                : CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        pinned: true,
+                        // floating: true,
+                        // snap: true,
+                        expandedHeight: 250,
+                        // shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(8)),
+                        flexibleSpace: FlexibleSpaceBar(
+                            title: Text(
+                              textAlign: TextAlign.center,
+                              notifier.user!.name.toString(),
+                              style: 20.sp(color: Colors.white),
+                            ),
+                            titlePadding: EdgeInsets.only(left: 20, bottom: 10),
+                            background: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                Image.asset(
+                                  'assets/images/user.png',
+                                  fit: BoxFit.cover,
+                                ),
+                                DecoratedBox(
+                                    decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                            colors: [
+                                      Colors.transparent,
+                                      Colors.black54,
+                                    ],
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter)))
+                              ],
+                            )),
                       ),
-                      // Text(provider.user!.email),
-                      // Text(provider.user!.createdAt.toIso8601String()),
-                      ElevatedButton(
-                          onPressed: () {
-                            provider.signOut();
-                          },
-                          child: Text(
-                            'Sign out',
-                            style: 16.sp(color: Color(0xFFBDBDBD)),
-                          ))
+                      SliverPadding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        sliver: SliverList(
+                            delegate: SliverChildListDelegate([
+                          _userSettings(
+                              Icons.phone_enabled_rounded, 'Contact', () {}),
+                          _userSettings(Icons.headset_rounded, 'Music', () {}),
+                          _userSettings(Icons.movie, 'Movie', () {}),
+                          _userSettings(
+                              Icons.hide_image_rounded, 'Hide', () {}),
+                          _userSettings(Icons.history_toggle_off_rounded,
+                              'History', () {}),
+                          _userSettings(
+                              Icons.currency_exchange, 'Exchange Rate', () {}),
+                          _userSettings(Icons.newspaper, 'World News', () {}),
+                          _userSettings(Icons.energy_savings_leaf,
+                              'Battery saver', () {}),
+                          _userSettings(
+                              Icons.logout_outlined, 'Log out', () {}),
+                        ])),
+                      )
                     ],
                   ),
-                ),
-              );
-            },
-          )),
+          );
+        },
+      ),
     );
   }
+}
+
+Widget _userSettings(IconData icon, String label, void Function() onTap) {
+  return Container(
+    width: double.infinity,
+    padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+    height: 60,
+    child: InkWell(
+      onTap: () {
+        onTap;
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color: Colors.grey,
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              Text(
+                label,
+                style: 16.sp(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }

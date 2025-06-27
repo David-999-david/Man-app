@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:user_auth/data/model/todo/todo_model.dart';
 import 'package:user_auth/domain/usecase/todo/todo_usecase.dart';
+import 'package:user_auth/presentation/home/widgets/addtodo.dart';
 
 class HomeNotifier extends ChangeNotifier {
   bool _loading = false;
@@ -104,6 +105,38 @@ class HomeNotifier extends ChangeNotifier {
       }
     } catch (e) {
       _msg = e.toString();
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+  }
+
+  final key = GlobalKey<FormState>();
+
+  TodoModel? _newTodo;
+  TodoModel? get newTodo => _newTodo;
+
+  final TextEditingController titleCtrl = TextEditingController();
+  final TextEditingController descCtrl = TextEditingController();
+
+  Future<bool> addNew() async {
+    _msg = null;
+    _loading = true;
+    notifyListeners();
+    try {
+      final response = await TodoUsecase()
+          .addTodo(AddTodo(title: titleCtrl.text, description: descCtrl.text));
+
+      _newTodo = response;
+
+      _todoList.insert(0, _newTodo!);
+
+      titleCtrl.clear();
+      descCtrl.clear();
+      return true;
+    } catch (e) {
+      _msg = e.toString();
+      return false;
     } finally {
       _loading = false;
       notifyListeners();

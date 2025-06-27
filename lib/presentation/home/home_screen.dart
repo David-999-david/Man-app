@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
 import 'package:user_auth/presentation/home/notifier/home_notifier.dart';
+import 'package:user_auth/presentation/home/widgets/addtodo.dart';
 import 'package:user_auth/presentation/widgets/loading_show.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -56,7 +58,12 @@ class HomeScreen extends StatelessWidget {
                                               borderSide: BorderSide()),
                                         ),
                                         onChanged: (value) {
-                                          provider.onSearch();
+                                          if (value.isEmpty) {
+                                            provider.refresh();
+                                            provider.getAllTodo();
+                                          } else {
+                                            provider.onSearch();
+                                          }
                                         },
                                       ),
                                     ),
@@ -230,7 +237,21 @@ class HomeScreen extends StatelessWidget {
                                                     : Color(0xFF212121)),
                                           ))
                                     ],
-                                  )
+                                  ),
+                            FloatingActionButton(
+                              onPressed: () {
+                                final created = AppNavigator.push<bool>(
+                                    context,
+                                    ChangeNotifierProvider.value(
+                                      value: provider,
+                                      child: Addtodo(),
+                                    ));
+                                if (created == true) {
+                                  provider.getAllTodo();
+                                }
+                              },
+                              child: Icon(Icons.add),
+                            )
                           ],
                         ),
                       ));
