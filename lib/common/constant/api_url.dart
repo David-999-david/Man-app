@@ -32,4 +32,6 @@ class ApiUrl {
   static const removeTodo = 'todos/';
 
   static const removeAll = 'todos/';
+
+  static const reoveMany = 'todos/batch';
 }

@@ -121,4 +121,23 @@ class TodoRemote {
           '${e.response?.statusCode} : ${e.response?.data['error']}');
     }
   }
+
+  Future<int> removeMany(List<int> ids) async {
+    try {
+      final response = await _dio.delete(ApiUrl.reoveMany, data: {'ids': ids});
+
+      final status = response.statusCode!;
+
+      if (status >= 200 && status < 300) {
+        final data = response.data as Map<String, dynamic>;
+        return data['deleted'];
+      } else {
+        throw Exception(
+            'Error => status=$status , message => ${response.data['error']}');
+      }
+    } on DioException catch (e) {
+      throw Exception(
+          '${e.response?.statusCode} : ${e.response?.data['error']}');
+    }
+  }
 }

@@ -25,4 +25,8 @@ class TodoRepository {
   Future<String> removeAll() {
     return TodoRemote().removeAll();
   }
+
+  Future<int> removeMany(List<int> ids) {
+    return TodoRemote().removeMany(ids);
+  }
 }

@@ -25,4 +25,8 @@ class TodoUsecase {
   Future<String> removeAll() async {
     return await TodoRepository().removeAll();
   }
+
+  Future<int> removeMany(List<int> ids) async {
+    return await TodoRepository().removeMany(ids);
+  }
 }

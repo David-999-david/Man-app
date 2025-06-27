@@ -1,9 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:user_auth/data/model/todo/todo_model.dart';
 import 'package:user_auth/domain/usecase/todo/todo_usecase.dart';
-import 'package:user_auth/presentation/home/widgets/addtodo.dart';
 
 class HomeNotifier extends ChangeNotifier {
   bool _loading = false;
@@ -133,6 +131,44 @@ class HomeNotifier extends ChangeNotifier {
 
       titleCtrl.clear();
       descCtrl.clear();
+      return true;
+    } catch (e) {
+      _msg = e.toString();
+      return false;
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+  }
+
+  List<int> _selectedId = [];
+  List<int> get selectedId => _selectedId;
+
+  final List<TodoModel> _selectedTodo = [];
+  List<TodoModel> get selectedTodo => _selectedTodo;
+
+  int? _deletedCounts;
+  int? get deletedCounts => _deletedCounts;
+
+  void onSelect(TodoModel todo) {
+    if (_selectedTodo.contains(todo)) {
+      _selectedTodo.remove(todo);
+    } else {
+      _selectedTodo.add(todo);
+    }
+    _selectedId = _selectedTodo.map((todo) => todo.id).toList();
+    notifyListeners();
+  }
+
+  Future<bool> removeMany() async {
+    _loading = true;
+    notifyListeners();
+    try {
+      final counts = await TodoUsecase().removeMany(selectedId);
+      _deletedCounts = counts;
+      _todoList.removeWhere((todo) => selectedId.contains(todo.id));
+      _selectedId.clear();
+      _selectedTodo.clear();
       return true;
     } catch (e) {
       _msg = e.toString();
