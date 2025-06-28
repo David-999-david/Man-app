@@ -7,6 +7,7 @@ import 'package:user_auth/presentation/home/notifier/home_notifier.dart';
 import 'package:user_auth/presentation/home/widgets/addtodo.dart';
 import 'package:user_auth/presentation/home/widgets/edittodo.dart';
 import 'package:user_auth/presentation/widgets/loading_show.dart';
+import 'package:badges/badges.dart' as badge;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -28,21 +29,36 @@ class HomeScreen extends StatelessWidget {
                   provider.selectedTodo.isNotEmpty
                       ? Row(
                           children: [
-                            IconButton(
-                                onPressed: () async {
-                                  final success = await provider.removeMany();
-                                  if (success) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                '${provider.deletedCounts} items had been deleted')));
-                                    provider.getAllTodo();
-                                  }
-                                },
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                )),
+                            badge.Badge(
+                              showBadge: provider.selectedTodo.isNotEmpty,
+                              position:
+                                  badge.BadgePosition.topEnd(top: -4, end: -4),
+                              badgeContent: Text(
+                                provider.selectedTodo.length.toString(),
+                                style: 12.sp(),
+                              ),
+                              badgeAnimation: badge.BadgeAnimation.slide(
+                                  toAnimate: true,
+                                  animationDuration:
+                                      Duration(milliseconds: 2200)),
+                              badgeStyle: badge.BadgeStyle(
+                                  badgeColor: Colors.redAccent),
+                              child: IconButton(
+                                  onPressed: () async {
+                                    final success = await provider.removeMany();
+                                    if (success) {
+                                      provider.getAllTodo();
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  '${provider.deletedCounts} had been deleted')));
+                                    }
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  )),
+                            ),
                             TextButton(
                                 onPressed: () {
                                   provider.cancel();

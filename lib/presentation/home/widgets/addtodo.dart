@@ -67,6 +67,10 @@ class Addtodo extends StatelessWidget {
                                       final success = await notifier.addNew();
                                       if (success) {
                                         AppNavigator.pop(context, success);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    '1 items had been added')));
                                       } else {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(

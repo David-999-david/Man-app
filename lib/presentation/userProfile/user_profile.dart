@@ -69,8 +69,8 @@ class UserProfile extends StatelessWidget {
                           _userSettings(Icons.newspaper, 'World News', () {}),
                           _userSettings(Icons.energy_savings_leaf,
                               'Battery saver', () {}),
-                          _userSettings(
-                              Icons.logout_outlined, 'Log out', () {}),
+                          _userSettings(Icons.logout_outlined, 'Log out',
+                              notifier.signOut),
                         ])),
                       )
                     ],
@@ -88,9 +88,7 @@ Widget _userSettings(IconData icon, String label, void Function() onTap) {
     padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
     height: 60,
     child: InkWell(
-      onTap: () {
-        onTap;
-      },
+      onTap: onTap,
       child: Card(
         child: Padding(
           padding: const EdgeInsets.only(left: 10),

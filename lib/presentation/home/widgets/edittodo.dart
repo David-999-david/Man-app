@@ -107,6 +107,10 @@ class Edittodo extends StatelessWidget {
                                     final success = await provider.onEditTodo();
                                     if (success) {
                                       AppNavigator.pop(context, success);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content:
+                                                  Text('Updated success')));
                                     }
                                   },
                                   child: Text(
