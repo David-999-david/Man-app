@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
     return ChangeNotifierProvider(
         create: (context) => HomeNotifier()..getAllTodo(),
         child: Consumer<HomeNotifier>(
-          builder: (context, provider, child) {
+          builder: (scaffoldCtx, provider, child) {
             return Scaffold(
               appBar: AppBar(
                 title: Text(
@@ -26,20 +26,33 @@ class HomeScreen extends StatelessWidget {
                 centerTitle: true,
                 actions: [
                   provider.selectedTodo.isNotEmpty
-                      ? IconButton(
-                          onPressed: () async {
-                            final success = await provider.removeMany();
-                            if (success) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text(
-                                      '${provider.deletedCounts} items had been deleted')));
-                              provider.getAllTodo();
-                            }
-                          },
-                          icon: Icon(
-                            Icons.delete,
-                            color: Colors.red,
-                          ))
+                      ? Row(
+                          children: [
+                            IconButton(
+                                onPressed: () async {
+                                  final success = await provider.removeMany();
+                                  if (success) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                '${provider.deletedCounts} items had been deleted')));
+                                    provider.getAllTodo();
+                                  }
+                                },
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                )),
+                            TextButton(
+                                onPressed: () {
+                                  provider.cancel();
+                                },
+                                child: Text(
+                                  'Cancel',
+                                  style: 13.sp(color: Colors.white),
+                                ))
+                          ],
+                        )
                       : SizedBox.shrink()
                 ],
               ),
@@ -119,7 +132,7 @@ class HomeScreen extends StatelessWidget {
                           SizedBox(
                             height: 5,
                           ),
-                          _todoItem(provider),
+                          _todoItem(provider, scaffoldCtx),
                           provider.seeMore
                               ? Row()
                               : Row(
@@ -217,7 +230,7 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-Widget _todoItem(HomeNotifier provider) {
+Widget _todoItem(HomeNotifier provider, BuildContext scafflodCtx) {
   return Expanded(
     child: ListView.separated(
         scrollDirection: Axis.vertical,
@@ -250,7 +263,17 @@ Widget _todoItem(HomeNotifier provider) {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   SlidableAction(
-                    onPressed: (_) => provider,
+                    onPressed: (_) async {
+                      final bool success =
+                          await provider.removeOne(currentTodo);
+                      if (success == true) {
+                        provider.getAllTodo();
+                        ScaffoldMessenger.of(scafflodCtx).showSnackBar(SnackBar(
+                            content: Text(
+                          '1 items had been removed!',
+                        )));
+                      }
+                    },
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
                     icon: Icons.clear,

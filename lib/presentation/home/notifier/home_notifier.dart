@@ -183,6 +183,12 @@ class HomeNotifier extends ChangeNotifier {
     }
   }
 
+  void cancel() {
+    _selectedTodo.clear();
+    _selectedId.clear();
+    notifyListeners();
+  }
+
   bool? _completed;
   bool? get completed => _completed;
 
@@ -192,6 +198,11 @@ class HomeNotifier extends ChangeNotifier {
       descCtrl.text = editTodo!.description;
       _completed = editTodo!.completed;
     }
+  }
+
+  void getBool(bool value) {
+    _completed = value;
+    notifyListeners();
   }
 
   Future<bool> onEditTodo() async {
@@ -213,6 +224,23 @@ class HomeNotifier extends ChangeNotifier {
       titleCtrl.clear();
       descCtrl.clear();
 
+      return true;
+    } catch (e) {
+      _msg = e.toString();
+      return false;
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> removeOne(TodoModel removeTodo) async {
+    _msg = null;
+    _loading = true;
+    notifyListeners();
+    try {
+      await TodoUsecase().removeById(removeTodo.id);
+      _todoList.removeWhere((todo) => todo.id == removeTodo.id);
       return true;
     } catch (e) {
       _msg = e.toString();

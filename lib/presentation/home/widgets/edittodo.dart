@@ -34,6 +34,45 @@ class Edittodo extends StatelessWidget {
                           SizedBox(
                             height: 15,
                           ),
+                          SizedBox(
+                            height: 70,
+                            child: Row(children: [
+                              Expanded(
+                                child: RadioListTile<bool>(
+                                  dense: true,
+                                  title: Text(
+                                    'Completed',
+                                    style: 14.sp(color: Color(0xFFBDBDBD)),
+                                  ),
+                                  visualDensity: VisualDensity(horizontal: -4),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 35),
+                                  value: true,
+                                  groupValue: provider.completed,
+                                  onChanged: (value) {
+                                    provider.getBool(value!);
+                                  },
+                                ),
+                              ),
+                              Expanded(
+                                child: RadioListTile<bool>(
+                                    dense: true,
+                                    title: Text(
+                                      'Incompleted',
+                                      style: 14.sp(color: Color(0xFFBDBDBD)),
+                                    ),
+                                    visualDensity:
+                                        VisualDensity(horizontal: -4),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: -10),
+                                    value: false,
+                                    groupValue: provider.completed,
+                                    onChanged: (value) {
+                                      provider.getBool(value!);
+                                    }),
+                              )
+                            ]),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -64,7 +103,12 @@ class Edittodo extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       side: BorderSide(color: Colors.white)),
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    final success = await provider.onEditTodo();
+                                    if (success) {
+                                      AppNavigator.pop(context, success);
+                                    }
+                                  },
                                   child: Text(
                                     'OK',
                                     style: 15.sp(),

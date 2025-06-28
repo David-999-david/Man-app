@@ -50,7 +50,7 @@ class LoginScreen extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 10,
+                                      height: 2,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -94,7 +94,7 @@ class LoginScreen extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 5,
+                                      height: 2,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
@@ -105,7 +105,7 @@ class LoginScreen extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 10,
+                                      height: 5,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
