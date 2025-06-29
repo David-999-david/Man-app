@@ -326,24 +326,35 @@ Widget _todoItem(HomeNotifier provider, BuildContext scafflodCtx) {
                                       ? Colors.blue
                                       : Colors.red)),
                       child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                currentTodo.title,
-                                style: 17.sp(color: Color(0xFF212121)),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                currentTodo.description,
-                                style: 14.sp(color: Color(0xFF212121)),
-                              ),
-                            ],
-                          )),
+                          padding: const EdgeInsets.only(
+                              left: 15, top: 8, bottom: 8),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      currentTodo.title,
+                                      style: 17.sp(color: Color(0xFF212121)),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      currentTodo.description,
+                                      style: 14.sp(color: Color(0xFF212121)),
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  child: SwitchListTile(
+                                      value: currentTodo.completed,
+                                      onChanged: (value) {
+                                        provider.editStatus(currentTodo, value);
+                                      }),
+                                )
+                              ])),
                     ),
                   ),
                 )

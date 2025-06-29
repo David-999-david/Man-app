@@ -29,4 +29,8 @@ class TodoUsecase {
   Future<int> removeMany(List<int> ids) async {
     return await TodoRepository().removeMany(ids);
   }
+
+  Future<TodoModel> updateTodoStatus(int id, bool todoStatus) async {
+    return await TodoRepository().updateTodoStatus(id, todoStatus);
+  }
 }

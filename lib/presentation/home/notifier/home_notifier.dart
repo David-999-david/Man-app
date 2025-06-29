@@ -250,6 +250,33 @@ class HomeNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // bool _status = false;
+  // bool get status => _status;
+
+  // void onEditStatus(bool value) {
+  //   _status = value;
+  //   notifyListeners();
+  // }
+
+  TodoModel? _ediedtTodo;
+  TodoModel? get editedTodo => _ediedtTodo;
+
+  Future<void> editStatus(TodoModel todo, bool status) async {
+    _msg = null;
+    _loading = true;
+    notifyListeners();
+    try {
+      final edited = await TodoUsecase().updateTodoStatus(todo.id, status);
+      final index = _todoList.indexWhere((td) => td.id == edited.id);
+      if (index != -1) {
+        _todoList[index] = edited;
+      }
+    } catch (e) {
+      _msg = e.toString();
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+  }
 }
-
-

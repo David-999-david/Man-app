@@ -29,4 +29,8 @@ class TodoRepository {
   Future<int> removeMany(List<int> ids) {
     return TodoRemote().removeMany(ids);
   }
+
+  Future<TodoModel> updateTodoStatus(int id, bool todoStatus) {
+    return TodoRemote().updateTodoStatus(id, todoStatus);
+  }
 }

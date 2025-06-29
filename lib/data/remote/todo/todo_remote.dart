@@ -140,4 +140,23 @@ class TodoRemote {
           '${e.response?.statusCode} : ${e.response?.data['error']}');
     }
   }
+
+  Future<TodoModel> updateTodoStatus(int id, bool todoStatus) async {
+    try {
+      final response = await _dio
+          .put('${ApiUrl.editTodoStatus}$id', data: {'status': todoStatus});
+      final status = response.statusCode!;
+      if (status >= 200 && status < 300) {
+        final data = response.data as Map<String, dynamic>;
+
+        return TodoModel.fromJson(data['updatedTodo']);
+      } else {
+        throw Exception(
+            'Error => status=$status , message => ${response.data['error']}');
+      }
+    } on DioException catch (e) {
+      throw Exception(
+          '${e.response?.statusCode} : ${e.response?.data['error']}');
+    }
+  }
 }
