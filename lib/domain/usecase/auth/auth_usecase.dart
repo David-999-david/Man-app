@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:user_auth/data/model/auth/login_model.dart';
 import 'package:user_auth/data/model/auth/register_model.dart';
 import 'package:user_auth/data/model/auth/user_model.dart';
@@ -42,5 +43,9 @@ class AuthUsecase {
 
   Future<String> changePassword(String newPsw) async {
     return await AuthRepo().changePassword(newPsw);
+  }
+
+  Future<String> uploadProfile(FormData form) async {
+    return await AuthRepo().uploadProfile(form);
   }
 }

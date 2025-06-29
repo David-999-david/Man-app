@@ -34,4 +34,6 @@ class ApiUrl {
   static const removeAll = 'todos/';
 
   static const reoveMany = 'todos/batch';
+
+  static const uploadProfile = 'auth/upload/avatar';
 }

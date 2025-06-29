@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
+import 'package:user_auth/presentation/userProfile/addedProfile/add_profile_image.dart';
 import 'package:user_auth/presentation/userProfile/notifier/user_notifier.dart';
 import 'package:user_auth/presentation/widgets/loading_show.dart';
 
@@ -26,6 +27,40 @@ class UserProfile extends StatelessWidget {
                         expandedHeight: 250,
                         // shape: RoundedRectangleBorder(
                         //     borderRadius: BorderRadius.circular(8)),
+                        actions: [
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5)),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Center(
+                                      child: Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.46,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.7,
+                                          decoration: BoxDecoration(
+                                              color: Colors.teal,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: AddProfileImage()),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Text(
+                                'Upload Profile',
+                                style: 15.sp(color: Colors.white),
+                              ))
+                        ],
                         flexibleSpace: FlexibleSpaceBar(
                             title: Text(
                               textAlign: TextAlign.center,
@@ -36,8 +71,8 @@ class UserProfile extends StatelessWidget {
                             background: Stack(
                               fit: StackFit.expand,
                               children: [
-                                Image.asset(
-                                  'assets/images/user.png',
+                                Image.network(
+                                  notifier.user!.imageUrl.toString(),
                                   fit: BoxFit.cover,
                                 ),
                                 DecoratedBox(

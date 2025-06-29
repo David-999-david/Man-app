@@ -226,4 +226,23 @@ class AuthRemote {
       throw e.response?.data['error'];
     }
   }
+
+  Future<String> uploadProfile(FormData form) async {
+    try {
+      final response = await _dio.post(ApiUrl.uploadProfile, data: form);
+
+      final status = response.statusCode!;
+
+      if (status >= 200 && status < 300) {
+        final data = response.data as Map<String, dynamic>;
+
+        return data['profileImage'];
+      } else {
+        throw Exception(
+            'Error : status=$status,message => ${response.data['error']}');
+      }
+    } on DioException catch (e) {
+      throw e.response?.data['error'];
+    }
+  }
 }
