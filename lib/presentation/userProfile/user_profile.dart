@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
 import 'package:user_auth/presentation/userProfile/addedProfile/add_profile_image.dart';
@@ -33,8 +34,8 @@ class UserProfile extends StatelessWidget {
                                   backgroundColor: Colors.transparent,
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 5)),
-                              onPressed: () {
-                                showDialog(
+                              onPressed: () async {
+                                final didUpload = await showDialog<bool>(
                                   context: context,
                                   builder: (context) {
                                     return Center(
@@ -55,6 +56,9 @@ class UserProfile extends StatelessWidget {
                                     );
                                   },
                                 );
+                                if (didUpload == true) {
+                                  context.read<UserNotifier>().getUserProfile();
+                                }
                               },
                               child: Text(
                                 'Upload Profile',
@@ -71,10 +75,15 @@ class UserProfile extends StatelessWidget {
                             background: Stack(
                               fit: StackFit.expand,
                               children: [
-                                Image.network(
-                                  notifier.user!.imageUrl.toString(),
-                                  fit: BoxFit.cover,
-                                ),
+                                notifier.user!.imageUrl == null
+                                    ? SpinKitCircle(
+                                        color: Colors.white,
+                                        size: 20,
+                                      )
+                                    : Image.network(
+                                        notifier.user!.imageUrl.toString(),
+                                        fit: BoxFit.cover,
+                                      ),
                                 DecoratedBox(
                                     decoration: BoxDecoration(
                                         gradient: LinearGradient(
