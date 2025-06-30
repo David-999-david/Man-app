@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
@@ -50,7 +51,7 @@ class AddProfileImage extends StatelessWidget {
                           EdgeInsets.symmetric(horizontal: 20, vertical: 3),
                       backgroundColor: Colors.transparent),
                   onPressed: () async {
-                    final success = await notifier.upload();
+                    final success = await notifier.upload(ImageSource.gallery);
                     if (success) {
                       AppNavigator.pop(context, true);
                     }
@@ -78,7 +79,7 @@ class AddProfileImage extends StatelessWidget {
                           EdgeInsets.symmetric(horizontal: 20, vertical: 3),
                       backgroundColor: Colors.transparent),
                   onPressed: () async {
-                    final success = await notifier.upload();
+                    final success = await notifier.upload(ImageSource.camera);
                     if (success) {
                       AppNavigator.pop(context, true);
                     }
