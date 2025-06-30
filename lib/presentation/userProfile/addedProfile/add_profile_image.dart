@@ -46,6 +46,8 @@ class AddProfileImage extends StatelessWidget {
               ),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 3),
                       backgroundColor: Colors.transparent),
                   onPressed: () async {
                     final success = await notifier.upload();
@@ -53,9 +55,50 @@ class AddProfileImage extends StatelessWidget {
                       AppNavigator.pop(context, true);
                     }
                   },
-                  child: Text(
-                    'Upload',
-                    style: 13.sp(color: Colors.white),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.image,
+                        size: 14,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 7,
+                      ),
+                      Text(
+                        'Choose from Gallery',
+                        style: 13.sp(color: Colors.white),
+                      )
+                    ],
+                  )),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+                      backgroundColor: Colors.transparent),
+                  onPressed: () async {
+                    final success = await notifier.upload();
+                    if (success) {
+                      AppNavigator.pop(context, true);
+                    }
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.camera_alt_outlined,
+                        size: 14,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 7,
+                      ),
+                      Text(
+                        'Take a Photo',
+                        style: 13.sp(color: Colors.white),
+                      )
+                    ],
                   ))
             ],
           );

@@ -1,7 +1,7 @@
 class ApiUrl {
-  static const baseUrl = 'http://10.0.2.2:3000/api/';
+  // static const baseUrl = 'http://10.0.2.2:3000/api/';
 
-  // static const baseUrl = 'http://127.0.0.1:3000/api/';
+  static const baseUrl = 'http://127.0.0.1:3000/api/';
 
   // static const baseUrl = 'http://192.168.1.42:3000/api/';
 

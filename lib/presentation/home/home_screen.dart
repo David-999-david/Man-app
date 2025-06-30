@@ -74,150 +74,163 @@ class HomeScreen extends StatelessWidget {
               ),
               body: provider.loading
                   ? LoadingShow()
-                  : Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(30, 0, 10, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Container(
-                                  height: 42,
-                                  width: 300,
-                                  color: Color(0xFF212121),
-                                  child: Card(
-                                    elevation: 1,
-                                    color: Colors.white,
-                                    child: TextField(
-                                      controller: provider.searchQuery,
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 2),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            borderSide: BorderSide()),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            borderSide: BorderSide()),
-                                      ),
-                                      onChanged: (value) {
-                                        if (value.isEmpty) {
-                                          provider.refresh();
-                                          provider.getAllTodo();
-                                        } else {
-                                          provider.onSearch();
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: provider.seeMore
-                                      ? InkWell(
-                                          onTap: () {
-                                            provider.refresh();
-                                            provider.getAllTodo();
-                                          },
-                                          child: Icon(
-                                            Icons.refresh,
-                                            color: Colors.lightBlue,
-                                            size: 20,
-                                          ))
-                                      : InkWell(
-                                          onTap: () {
-                                            provider.loadMore();
-                                            provider.getAllTodo();
-                                          },
-                                          child: Text(
-                                            softWrap: true,
-                                            'More..',
-                                            style:
-                                                12.sp(color: Colors.lightBlue),
-                                          ),
-                                        ),
-                                ),
-                              ],
-                            ),
+                  : provider.todoList.isEmpty
+                      ? Center(
+                        child: Text(
+                            'No data here',
+                            style: 16.sp(color: Colors.white),
                           ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          _todoItem(provider, scaffoldCtx),
-                          provider.seeMore
-                              ? Row()
-                              : Row(
+                      )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 0, 10, 0),
+                                child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    OutlinedButton(
-                                        style: OutlinedButton.styleFrom(
-                                          side: BorderSide(
-                                              color: provider.currentPage <= 1
-                                                  ? Colors.grey
-                                                  : Colors.orange),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          backgroundColor:
-                                              provider.currentPage <= 1
-                                                  ? Color(0xFF212121)
-                                                  : Color(0xFFBDBDBD),
+                                    Container(
+                                      height: 42,
+                                      width: 300,
+                                      color: Color(0xFF212121),
+                                      child: Card(
+                                        elevation: 1,
+                                        color: Colors.white,
+                                        child: TextField(
+                                          controller: provider.searchQuery,
+                                          decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    horizontal: 10,
+                                                    vertical: 2),
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                borderSide: BorderSide()),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                borderSide: BorderSide()),
+                                          ),
+                                          onChanged: (value) {
+                                            if (value.isEmpty) {
+                                              provider.refresh();
+                                              provider.getAllTodo();
+                                            } else {
+                                              provider.onSearch();
+                                            }
+                                          },
                                         ),
-                                        onPressed: provider.currentPage <= 1
-                                            ? null
-                                            : () {
-                                                provider.prevPage();
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: provider.seeMore
+                                          ? InkWell(
+                                              onTap: () {
+                                                provider.refresh();
                                                 provider.getAllTodo();
                                               },
-                                        child: Text(
-                                          'Prev',
-                                          style: 15.sp(
-                                              color: provider.currentPage <= 1
-                                                  ? Colors.grey
-                                                  : Color(0xFF212121)),
-                                        )),
-                                    OutlinedButton(
-                                        style: OutlinedButton.styleFrom(
-                                          side: BorderSide(
-                                              color: provider.currentPage ==
-                                                      provider.totalPage
-                                                  ? Colors.grey
-                                                  : Colors.orange),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          backgroundColor:
-                                              provider.currentPage ==
-                                                      provider.totalPage
-                                                  ? Color(0xFF212121)
-                                                  : Color(0xFFBDBDBD),
-                                        ),
-                                        onPressed: provider.currentPage ==
-                                                provider.totalPage
-                                            ? null
-                                            : () {
-                                                provider.nextPage();
+                                              child: Icon(
+                                                Icons.refresh,
+                                                color: Colors.lightBlue,
+                                                size: 20,
+                                              ))
+                                          : InkWell(
+                                              onTap: () {
+                                                provider.loadMore();
                                                 provider.getAllTodo();
                                               },
-                                        child: Text(
-                                          'Next',
-                                          style: 15.sp(
-                                              color: provider.currentPage ==
-                                                      provider.totalPage
-                                                  ? Colors.grey
-                                                  : Color(0xFF212121)),
-                                        ))
+                                              child: Text(
+                                                softWrap: true,
+                                                'More..',
+                                                style: 12.sp(
+                                                    color: Colors.lightBlue),
+                                              ),
+                                            ),
+                                    ),
                                   ],
                                 ),
-                        ],
-                      ),
-                    ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              _todoItem(provider, scaffoldCtx),
+                              provider.seeMore
+                                  ? Row()
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        OutlinedButton(
+                                            style: OutlinedButton.styleFrom(
+                                              side: BorderSide(
+                                                  color:
+                                                      provider.currentPage <= 1
+                                                          ? Colors.grey
+                                                          : Colors.orange),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                              backgroundColor:
+                                                  provider.currentPage <= 1
+                                                      ? Color(0xFF212121)
+                                                      : Color(0xFFBDBDBD),
+                                            ),
+                                            onPressed: provider.currentPage <= 1
+                                                ? null
+                                                : () {
+                                                    provider.prevPage();
+                                                    provider.getAllTodo();
+                                                  },
+                                            child: Text(
+                                              'Prev',
+                                              style: 15.sp(
+                                                  color:
+                                                      provider.currentPage <= 1
+                                                          ? Colors.grey
+                                                          : Color(0xFF212121)),
+                                            )),
+                                        OutlinedButton(
+                                            style: OutlinedButton.styleFrom(
+                                              side: BorderSide(
+                                                  color: provider.currentPage ==
+                                                          provider.totalPage
+                                                      ? Colors.grey
+                                                      : Colors.orange),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                              backgroundColor:
+                                                  provider.currentPage ==
+                                                          provider.totalPage
+                                                      ? Color(0xFF212121)
+                                                      : Color(0xFFBDBDBD),
+                                            ),
+                                            onPressed: provider.currentPage ==
+                                                    provider.totalPage
+                                                ? null
+                                                : () {
+                                                    provider.nextPage();
+                                                    provider.getAllTodo();
+                                                  },
+                                            child: Text(
+                                              'Next',
+                                              style: 15.sp(
+                                                  color: provider.currentPage ==
+                                                          provider.totalPage
+                                                      ? Colors.grey
+                                                      : Color(0xFF212121)),
+                                            ))
+                                      ],
+                                    ),
+                            ],
+                          ),
+                        ),
               floatingActionButton: FloatingActionButton(
                 mini: true,
                 shape: RoundedRectangleBorder(
@@ -350,6 +363,10 @@ Widget _todoItem(HomeNotifier provider, BuildContext scafflodCtx) {
                                 Expanded(
                                   child: SwitchListTile(
                                       value: currentTodo.completed,
+                                      contentPadding:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      visualDensity: VisualDensity(
+                                          horizontal: -4, vertical: -4),
                                       onChanged: (value) {
                                         provider.editStatus(currentTodo, value);
                                       }),

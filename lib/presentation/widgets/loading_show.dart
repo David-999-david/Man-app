@@ -7,8 +7,8 @@ class LoadingShow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SpinKitWave(
-        color: Colors.red,
+      child: SpinKitCircle(
+        color: Colors.white,
         duration: Duration(seconds: 10),
         size: 30,
       ),

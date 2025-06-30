@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
 import 'package:user_auth/presentation/userProfile/addedProfile/add_profile_image.dart';
+import 'package:user_auth/presentation/userProfile/contact/contact.dart';
 import 'package:user_auth/presentation/userProfile/notifier/user_notifier.dart';
 import 'package:user_auth/presentation/widgets/loading_show.dart';
 
@@ -22,10 +24,9 @@ class UserProfile extends StatelessWidget {
                 : CustomScrollView(
                     slivers: [
                       SliverAppBar(
-                        pinned: true,
                         // floating: true,
                         // snap: true,
-                        expandedHeight: 250,
+                        expandedHeight: 300,
                         // shape: RoundedRectangleBorder(
                         //     borderRadius: BorderRadius.circular(8)),
                         actions: [
@@ -88,8 +89,8 @@ class UserProfile extends StatelessWidget {
                                     decoration: BoxDecoration(
                                         gradient: LinearGradient(
                                             colors: [
-                                      Colors.transparent,
                                       Colors.black54,
+                                      Colors.transparent,
                                     ],
                                             begin: Alignment.topCenter,
                                             end: Alignment.bottomCenter)))
@@ -100,8 +101,10 @@ class UserProfile extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 10),
                         sliver: SliverList(
                             delegate: SliverChildListDelegate([
-                          _userSettings(
-                              Icons.phone_enabled_rounded, 'Contact', () {}),
+                          _userSettings(Icons.phone_enabled_rounded, 'Contact',
+                              () {
+                            AppNavigator.push(context, Contact());
+                          }),
                           _userSettings(Icons.headset_rounded, 'Music', () {}),
                           _userSettings(Icons.movie, 'Movie', () {}),
                           _userSettings(
