@@ -1,9 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:user_auth/data/model/todo/todo_model.dart';
 import 'package:user_auth/domain/repository/todo/todo_repository.dart';
 
 class TodoUsecase {
-  Future<TodoModel> addTodo(AddTodo todo) async {
-    return await TodoRepository().addTodo(todo);
+  Future<TodoModel> addTodo(FormData form) async {
+    return await TodoRepository().addTodo(form);
   }
 
   Future<PaginationTodo> getAllTodo(String? query, int page, int limit) async {

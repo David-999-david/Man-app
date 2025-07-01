@@ -1,9 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:user_auth/data/model/todo/todo_model.dart';
 import 'package:user_auth/data/remote/todo/todo_remote.dart';
 
 class TodoRepository {
-  Future<TodoModel> addTodo(AddTodo todo) {
-    return TodoRemote().addTodo(todo);
+  Future<TodoModel> addTodo(FormData form) {
+    return TodoRemote().addTodo(form);
   }
 
   Future<PaginationTodo> getAllTodo(String? query, int page, int limit) {

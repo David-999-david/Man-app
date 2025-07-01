@@ -6,9 +6,10 @@ import 'package:user_auth/data/model/todo/todo_model.dart';
 class TodoRemote {
   final Dio _dio = DioClient.dio;
 
-  Future<TodoModel> addTodo(AddTodo todo) async {
+  Future<TodoModel> addTodo(FormData form) async {
     try {
-      final response = await _dio.post(ApiUrl.addTodo, data: todo.toJson());
+      final response = await _dio.post(ApiUrl.addTodo,
+          data: form, options: Options(contentType: 'multipart/form-data'));
 
       final status = response.statusCode;
       if (status! >= 200 && status < 300) {

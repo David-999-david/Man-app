@@ -10,9 +10,9 @@ class DioClient {
     final dio = Dio(BaseOptions(
       baseUrl: ApiUrl.baseUrl,
       headers: {'Content-Type': 'application/json'},
-      receiveTimeout: Duration(seconds: 10),
-      connectTimeout: Duration(seconds: 15),
-      sendTimeout: Duration(seconds: 15),
+      receiveTimeout: Duration(seconds: 60),
+      connectTimeout: Duration(seconds: 60),
+      sendTimeout: Duration(seconds: 60),
       responseType: ResponseType.json,
     ));
     final auth = await AuthInterceptor.create();

@@ -1,5 +1,11 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:user_auth/data/model/todo/todo_model.dart';
 import 'package:user_auth/domain/usecase/todo/todo_usecase.dart';
 
@@ -113,6 +119,54 @@ class HomeNotifier extends ChangeNotifier {
     }
   }
 
+  String? _imageUrl = '';
+  String? get imageUrl => _imageUrl;
+
+  Future<bool> requestGalleryAndCameraPer(ImageSource source) async {
+    if (source == ImageSource.camera) {
+      final status = await Permission.camera.status;
+
+      if (status.isGranted) return true;
+
+      final result = await Permission.camera.request();
+
+      if (result.isGranted) return true;
+
+      if (result.isPermanentlyDenied) {
+        await openAppSettings();
+      }
+      return false;
+    } else {
+      if (Platform.isAndroid) {
+        final status = await Permission.storage.status;
+
+        if (status.isGranted) return true;
+
+        final result = await Permission.storage.request();
+
+        if (result.isGranted) return true;
+
+        if (result.isPermanentlyDenied) {
+          await openAppSettings();
+        }
+        return false;
+      } else {
+        final status = await Permission.storage.status;
+
+        if (status.isGranted) return true;
+
+        final result = await Permission.storage.request();
+
+        if (result.isGranted) return true;
+
+        if (result.isPermanentlyDenied) {
+          await openAppSettings();
+        }
+        return false;
+      }
+    }
+  }
+
   final key = GlobalKey<FormState>();
 
   TodoModel? _newTodo;
@@ -120,14 +174,38 @@ class HomeNotifier extends ChangeNotifier {
 
   final TextEditingController titleCtrl = TextEditingController();
   final TextEditingController descCtrl = TextEditingController();
+  final TextEditingController imageDescCtrl = TextEditingController();
 
-  Future<bool> addNew() async {
+  XFile? _picked;
+
+  Future<void> onPick(ImageSource source) async {
+    if (await requestGalleryAndCameraPer(source)) {
+      final picked = await ImagePicker().pickImage(source: source);
+      if (picked == null) return;
+      _picked = picked;
+      _imageUrl = picked.path;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> addNew(ImageSource source) async {
     _msg = null;
     _loading = true;
     notifyListeners();
     try {
-      final response = await TodoUsecase()
-          .addTodo(AddTodo(title: titleCtrl.text, description: descCtrl.text));
+      final mimeType = await lookupMimeType(_picked!.path) ?? 'image/jpeg';
+
+      final part = mimeType.split('/');
+
+      final file = FormData.fromMap({
+        'title': titleCtrl.text,
+        'description': descCtrl.text,
+        'imageDescription': imageDescCtrl.text,
+        'file': await MultipartFile.fromFile(_picked!.path,
+            filename: _picked!.name, contentType: MediaType(part[0], part[1]))
+      });
+
+      final response = await TodoUsecase().addTodo(file);
 
       _newTodo = response;
 
@@ -135,6 +213,7 @@ class HomeNotifier extends ChangeNotifier {
 
       titleCtrl.clear();
       descCtrl.clear();
+      imageDescCtrl.clear();
       return true;
     } catch (e) {
       _msg = e.toString();

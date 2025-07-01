@@ -344,6 +344,9 @@ Widget _todoItem(HomeNotifier provider, BuildContext scafflodCtx) {
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                CircleAvatar(
+                                  radius: 30,
+                                ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

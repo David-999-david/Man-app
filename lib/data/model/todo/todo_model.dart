@@ -56,19 +56,27 @@ class PaginationTodo {
   }
 }
 
-class AddTodo {
-  final String title;
-  final String description;
+// class AddTodo {
+//   final String title;
+//   final String description;
+//   final FormData? file;
+//   final String? imageDesc;
 
-  AddTodo({
-    required this.title,
-    required this.description,
-  });
+//   AddTodo(
+//       {required this.title,
+//       required this.description,
+//       this.file,
+//       this.imageDesc});
 
-  Map<String, dynamic> toJson() {
-    return {'title': title, 'description': description};
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'title': title,
+//       'description': description,
+//       'imageDescription': imageDesc,
+//       ''
+//     };
+//   }
+// }
 
 class EdiitTodo {
   final String? title;
