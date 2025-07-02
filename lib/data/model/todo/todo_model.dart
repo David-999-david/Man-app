@@ -5,6 +5,7 @@ class TodoModel {
   final bool completed;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final List<String> imageUrl;
 
   TodoModel(
       {required this.id,
@@ -12,7 +13,8 @@ class TodoModel {
       required this.description,
       required this.completed,
       required this.createdAt,
-      required this.updatedAt});
+      required this.updatedAt,
+      required this.imageUrl});
 
   factory TodoModel.fromJson(Map<String, dynamic> json) {
     return TodoModel(
@@ -21,7 +23,10 @@ class TodoModel {
         description: json['description'] as String,
         completed: json['completed'] as bool,
         createdAt: DateTime.parse(json['created_at'] as String),
-        updatedAt: DateTime.parse(json['updated_at'] as String));
+        updatedAt: DateTime.parse(json['updated_at'] as String),
+        imageUrl: (json['image_urls'] as List<dynamic>)
+            .map((image) => image as String)
+            .toList());
   }
 }
 

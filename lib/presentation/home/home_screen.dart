@@ -76,11 +76,11 @@ class HomeScreen extends StatelessWidget {
                   ? LoadingShow()
                   : provider.todoList.isEmpty
                       ? Center(
-                        child: Text(
+                          child: Text(
                             'No data here',
                             style: 16.sp(color: Colors.white),
                           ),
-                      )
+                        )
                       : Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Column(
@@ -266,6 +266,7 @@ Widget _todoItem(HomeNotifier provider, BuildContext scafflodCtx) {
         itemBuilder: (context, index) {
           final currentTodo = provider.todoList[index];
           final isSelected = provider.selectedTodo.contains(currentTodo);
+          final todoImagesList = provider.todoList[index].imageUrl;
           return Slidable(
             key: ValueKey(currentTodo.id),
             endActionPane: ActionPane(
@@ -344,8 +345,32 @@ Widget _todoItem(HomeNotifier provider, BuildContext scafflodCtx) {
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CircleAvatar(
-                                  radius: 30,
+                                SizedBox(
+                                  width: 60,
+                                  height: 60,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return todoImagesList.isEmpty
+                                          ? CircleAvatar(
+                                              backgroundColor: Colors.teal,
+                                              radius: 30,
+                                              child: Icon(Icons.image),
+                                            )
+                                          : CircleAvatar(
+                                              backgroundColor: Colors.teal,
+                                              radius: 30,
+                                              backgroundImage: NetworkImage(
+                                                  todoImagesList[index]),
+                                            );
+                                    },
+                                    itemCount: todoImagesList.isEmpty
+                                        ? 1
+                                        : todoImagesList.length,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
