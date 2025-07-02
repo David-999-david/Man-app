@@ -5,7 +5,7 @@ class TodoModel {
   final bool completed;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final List<String> imageUrl;
+  final List<TodoImage> imageUrl;
 
   TodoModel(
       {required this.id,
@@ -24,8 +24,8 @@ class TodoModel {
         completed: json['completed'] as bool,
         createdAt: DateTime.parse(json['created_at'] as String),
         updatedAt: DateTime.parse(json['updated_at'] as String),
-        imageUrl: (json['image_urls'] as List<dynamic>)
-            .map((image) => image as String)
+        imageUrl: (json['images'] as List<dynamic>)
+            .map((image) => TodoImage.fromJson(image))
             .toList());
   }
 }
@@ -58,6 +58,18 @@ class PaginationTodo {
         itemCounts: meta['itemCounts'] as int,
         total: meta['totalCounts'] as int,
         totalPages: meta['totalPage'] as int);
+  }
+}
+
+class TodoImage {
+  final String? url;
+  final String? imageDesc;
+
+  TodoImage({required this.url, required this.imageDesc});
+
+  factory TodoImage.fromJson(Map<String, dynamic> json) {
+    return TodoImage(
+        url: json['url'] as String, imageDesc: json['imageDesc'] as String);
   }
 }
 

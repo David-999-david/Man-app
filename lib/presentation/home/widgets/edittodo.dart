@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
@@ -26,6 +29,10 @@ class Edittodo extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          _todoImageCard(provider),
+                          SizedBox(
+                            height: 20,
+                          ),
                           _textFormField(provider.titleCtrl, 'Title'),
                           SizedBox(
                             height: 15,
@@ -128,6 +135,65 @@ class Edittodo extends StatelessWidget {
       },
     );
   }
+}
+
+Widget _todoImageCard(HomeNotifier notifier) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+    height: 322,
+    width: 250,
+    child: Card(
+      color: Colors.brown,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: CircleAvatar(
+              backgroundImage: notifier.imageUrl!.isEmpty
+                  ? null
+                  : FileImage(File(notifier.imageUrl!)),
+              radius: 80,
+              child: notifier.imageUrl!.isEmpty
+                  ? Icon(
+                      Icons.person,
+                      size: 60,
+                    )
+                  : null,
+            ),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                  fixedSize: Size(130, 32)),
+              onPressed: () async {
+                await notifier.onPick(ImageSource.gallery);
+              },
+              child: Text(
+                'From Gallery',
+                style: 13.sp(color: Colors.white),
+              )),
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                  fixedSize: Size(130, 32)),
+              onPressed: () async {
+                await notifier.onPick(ImageSource.camera);
+              },
+              child: Text(
+                'Open Camera',
+                style: 13.sp(color: Colors.white),
+              ))
+        ],
+      ),
+    ),
+  );
 }
 
 Widget _textFormField(TextEditingController controller, String hint) {

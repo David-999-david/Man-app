@@ -361,7 +361,9 @@ Widget _todoItem(HomeNotifier provider, BuildContext scafflodCtx) {
                                               backgroundColor: Colors.teal,
                                               radius: 30,
                                               backgroundImage: NetworkImage(
-                                                  todoImagesList[index]),
+                                                  todoImagesList[index]
+                                                      .url
+                                                      .toString()),
                                             );
                                     },
                                     itemCount: todoImagesList.isEmpty
@@ -415,3 +417,5 @@ Widget _todoItem(HomeNotifier provider, BuildContext scafflodCtx) {
         itemCount: provider.todoList.length),
   );
 }
+
+
