@@ -310,9 +310,13 @@ class HomeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _onEditLoading = false;
+  bool get onEditLoaidng => _onEditLoading;
+
   Future<bool> onEditTodo() async {
     _msg = null;
-    _loading = true;
+    _editingIds.add(editTodo!.id);
+    _onEditLoading = true;
     notifyListeners();
     try {
       final map = {
@@ -347,7 +351,8 @@ class HomeNotifier extends ChangeNotifier {
       _msg = e.toString();
       return false;
     } finally {
-      _loading = false;
+      _editingIds.remove(editTodo!.id);
+      _onEditLoading = false;
       notifyListeners();
     }
   }
@@ -380,9 +385,12 @@ class HomeNotifier extends ChangeNotifier {
   TodoModel? _ediedtTodo;
   TodoModel? get editedTodo => _ediedtTodo;
 
+  final Set<int> _editingIds = {};
+  bool isEditing(int id) => _editingIds.contains(id);
+
   Future<void> editStatus(TodoModel todo, bool status) async {
     _msg = null;
-    _loading = true;
+    _editingIds.add(todo.id);
     notifyListeners();
     try {
       final edited = await TodoUsecase().updateTodoStatus(todo.id, status);
@@ -393,7 +401,7 @@ class HomeNotifier extends ChangeNotifier {
     } catch (e) {
       _msg = e.toString();
     } finally {
-      _loading = false;
+      _editingIds.remove(todo.id);
       notifyListeners();
     }
   }

@@ -18,10 +18,10 @@ class Edittodo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<HomeNotifier>(
       builder: (context, provider, child) {
-        return provider.loading
-            ? LoadingShow()
-            : Scaffold(
-                body: Padding(
+        return Scaffold(
+          body: provider.onEditLoaidng
+              ? LoadingShow()
+              : Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Center(
                     child: Form(
@@ -136,7 +136,7 @@ class Edittodo extends StatelessWidget {
                     ),
                   ),
                 ),
-              );
+        );
       },
     );
   }

@@ -267,147 +267,166 @@ Widget _todoItem(HomeNotifier provider, BuildContext scafflodCtx) {
           final currentTodo = provider.todoList[index];
           final isSelected = provider.selectedTodo.contains(currentTodo);
           final todoImagesList = provider.todoList[index].imageUrl;
-          return Slidable(
-            key: ValueKey(currentTodo.id),
-            endActionPane: ActionPane(
-                motion: DrawerMotion(),
-                extentRatio: 0.23,
-                children: [
-                  SlidableAction(
-                    onPressed: (_) async {
-                      final success = await AppNavigator.push<bool>(
-                          context,
-                          ChangeNotifierProvider<HomeNotifier>(
-                            create: (_) =>
-                                HomeNotifier(editTodo: currentTodo)..getOld(),
-                            child: Edittodo(editTodo: currentTodo),
-                          ));
-                      if (success == true) {
-                        provider.getAllTodo();
-                      }
-                    },
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                    icon: Icons.edit,
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  SlidableAction(
-                    onPressed: (_) async {
-                      final bool success =
-                          await provider.removeOne(currentTodo);
-                      if (success == true) {
-                        provider.getAllTodo();
-                        ScaffoldMessenger.of(scafflodCtx).showSnackBar(SnackBar(
-                            content: Text(
-                          '1 items had been removed!',
-                        )));
-                      }
-                    },
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    icon: Icons.clear,
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ]),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 12,
-                  child: Text(
-                    ((provider.currentPage - 1) * provider.limit + index + 1)
-                        .toString(),
-                    style: 13.sp(),
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Expanded(
-                  child: InkWell(
-                    onLongPress: () {
-                      provider.onSelect(currentTodo);
-                    },
-                    child: Card(
-                      color: Color(0xFFBDBDBD),
-                      shape: RoundedRectangleBorder(
+          return provider.isEditing(currentTodo.id)
+              ? LoadingShow()
+              : Slidable(
+                  key: ValueKey(currentTodo.id),
+                  endActionPane: ActionPane(
+                      motion: DrawerMotion(),
+                      extentRatio: 0.23,
+                      children: [
+                        SlidableAction(
+                          onPressed: (_) async {
+                            final success = await AppNavigator.push<bool>(
+                                context,
+                                ChangeNotifierProvider<HomeNotifier>(
+                                  create: (_) =>
+                                      HomeNotifier(editTodo: currentTodo)
+                                        ..getOld(),
+                                  child: Edittodo(editTodo: currentTodo),
+                                ));
+                            if (success == true) {
+                              provider.getAllTodo();
+                            }
+                          },
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          icon: Icons.edit,
+                          padding: EdgeInsets.symmetric(horizontal: 5),
                           borderRadius: BorderRadius.circular(10),
-                          side: BorderSide(
-                              color: isSelected
-                                  ? Colors.green
-                                  : currentTodo.completed
-                                      ? Colors.blue
-                                      : Colors.red)),
-                      child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, top: 8, bottom: 8),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: 60,
-                                  height: 60,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      return todoImagesList.isEmpty
-                                          ? CircleAvatar(
-                                              backgroundColor: Colors.teal,
-                                              radius: 30,
-                                              child: Icon(Icons.image),
+                        ),
+                        SlidableAction(
+                          onPressed: (_) async {
+                            final bool success =
+                                await provider.removeOne(currentTodo);
+                            if (success == true) {
+                              provider.getAllTodo();
+                              ScaffoldMessenger.of(scafflodCtx)
+                                  .showSnackBar(SnackBar(
+                                      content: Text(
+                                '1 items had been removed!',
+                              )));
+                            }
+                          },
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          icon: Icons.clear,
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ]),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 12,
+                        child: Text(
+                          ((provider.currentPage - 1) * provider.limit +
+                                  index +
+                                  1)
+                              .toString(),
+                          style: 13.sp(),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onLongPress: () {
+                            provider.onSelect(currentTodo);
+                          },
+                          child: Card(
+                            color: Color(0xFFBDBDBD),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: BorderSide(
+                                    color: isSelected
+                                        ? Colors.green
+                                        : currentTodo.completed
+                                            ? Colors.blue
+                                            : Colors.red)),
+                            child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15, top: 8, bottom: 8),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: 60,
+                                        height: 60,
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, index) {
+                                            return todoImagesList.isEmpty
+                                                ? CircleAvatar(
+                                                    backgroundColor:
+                                                        Colors.teal,
+                                                    radius: 30,
+                                                    child: Icon(Icons.image),
+                                                  )
+                                                : CircleAvatar(
+                                                    backgroundColor:
+                                                        Colors.teal,
+                                                    radius: 30,
+                                                    backgroundImage:
+                                                        NetworkImage(
+                                                            todoImagesList[
+                                                                    index]
+                                                                .url
+                                                                .toString()),
+                                                  );
+                                          },
+                                          itemCount: todoImagesList.isEmpty
+                                              ? 1
+                                              : todoImagesList.length,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            currentTodo.title,
+                                            style:
+                                                17.sp(color: Color(0xFF212121)),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            currentTodo.description,
+                                            style:
+                                                14.sp(color: Color(0xFF212121)),
+                                          ),
+                                        ],
+                                      ),
+                                      provider.isEditing(currentTodo.id)
+                                          ? Expanded(child: LoadingShow())
+                                          : Expanded(
+                                              child: SwitchListTile(
+                                                  value: currentTodo.completed,
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                          horizontal: 8),
+                                                  visualDensity: VisualDensity(
+                                                      horizontal: -4,
+                                                      vertical: -4),
+                                                  onChanged: (value) {
+                                                    provider.editStatus(
+                                                        currentTodo, value);
+                                                  }),
                                             )
-                                          : CircleAvatar(
-                                              backgroundColor: Colors.teal,
-                                              radius: 30,
-                                              backgroundImage: NetworkImage(
-                                                  todoImagesList[index]
-                                                      .url
-                                                      .toString()),
-                                            );
-                                    },
-                                    itemCount: todoImagesList.isEmpty
-                                        ? 1
-                                        : todoImagesList.length,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      currentTodo.title,
-                                      style: 17.sp(color: Color(0xFF212121)),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      currentTodo.description,
-                                      style: 14.sp(color: Color(0xFF212121)),
-                                    ),
-                                  ],
-                                ),
-                                Expanded(
-                                  child: SwitchListTile(
-                                      value: currentTodo.completed,
-                                      contentPadding:
-                                          EdgeInsets.symmetric(horizontal: 8),
-                                      visualDensity: VisualDensity(
-                                          horizontal: -4, vertical: -4),
-                                      onChanged: (value) {
-                                        provider.editStatus(currentTodo, value);
-                                      }),
-                                )
-                              ])),
-                    ),
+                                    ])),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                )
-              ],
-            ),
-          );
+                );
         },
         separatorBuilder: (context, index) {
           return SizedBox(
@@ -417,5 +436,3 @@ Widget _todoItem(HomeNotifier provider, BuildContext scafflodCtx) {
         itemCount: provider.todoList.length),
   );
 }
-
-

@@ -145,7 +145,7 @@ class TodoRemote {
   Future<TodoModel> updateTodoStatus(int id, bool todoStatus) async {
     try {
       final response = await _dio
-          .put('${ApiUrl.editTodoStatus}$id', data: {'status': todoStatus});
+          .put('${ApiUrl.editTodoStatus}$id', data: {'completed': todoStatus});
       final status = response.statusCode!;
       if (status >= 200 && status < 300) {
         final data = response.data as Map<String, dynamic>;
