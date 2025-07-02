@@ -15,7 +15,7 @@ class TodoUsecase {
     return await TodoRepository().getTodoById(id);
   }
 
-  Future<TodoModel> editTodo(int id, EdiitTodo todo) async {
+  Future<TodoModel> editTodo(int id, FormData todo) async {
     return await TodoRepository().editTodo(id, todo);
   }
 

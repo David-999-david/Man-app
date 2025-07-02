@@ -77,7 +77,7 @@ class Addtodo extends StatelessWidget {
                                   onPressed: () async {
                                     if (notifier.key.currentState!.validate()) {
                                       final success = await notifier
-                                          .addNew(ImageSource.camera);
+                                          .addNew();
                                       if (success) {
                                         AppNavigator.pop(context, success);
                                         ScaffoldMessenger.of(context)

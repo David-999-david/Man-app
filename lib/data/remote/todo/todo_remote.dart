@@ -65,10 +65,10 @@ class TodoRemote {
     }
   }
 
-  Future<TodoModel> editTodo(int id, EdiitTodo todo) async {
+  Future<TodoModel> editTodo(int id, FormData todo) async {
     try {
-      final response =
-          await _dio.put('${ApiUrl.editTodo}$id', data: todo.toJson());
+      final response = await _dio.put('${ApiUrl.editTodo}$id',
+          data: todo, options: Options(contentType: 'multipart/form-data'));
 
       final status = response.statusCode!;
 

@@ -41,6 +41,11 @@ class Edittodo extends StatelessWidget {
                           SizedBox(
                             height: 15,
                           ),
+                          _textFormField(
+                              provider.imageDescCtrl, 'Image Description'),
+                          SizedBox(
+                            height: 15,
+                          ),
                           SizedBox(
                             height: 70,
                             child: Row(children: [
@@ -151,11 +156,15 @@ Widget _todoImageCard(HomeNotifier notifier) {
           Padding(
             padding: const EdgeInsets.only(top: 5),
             child: CircleAvatar(
-              backgroundImage: notifier.imageUrl!.isEmpty
-                  ? null
-                  : FileImage(File(notifier.imageUrl!)),
+              backgroundImage: notifier.imageUrl!.isNotEmpty
+                  ? FileImage(File(notifier.imageUrl!))
+                  : notifier.editTodo!.imageUrl.isNotEmpty
+                      ? NetworkImage(
+                          notifier.editTodo!.imageUrl.first.url.toString())
+                      : null,
               radius: 80,
-              child: notifier.imageUrl!.isEmpty
+              child: notifier.editTodo!.imageUrl.isEmpty &&
+                      notifier.imageUrl!.isEmpty
                   ? Icon(
                       Icons.person,
                       size: 60,
@@ -203,7 +212,7 @@ Widget _textFormField(TextEditingController controller, String hint) {
         filled: true,
         fillColor: Color(0xFFBDBDBD),
         hintText: hint,
-        hintStyle: 14.sp(),
+        hintStyle: 14.sp(color: const Color.fromARGB(255, 103, 102, 102)),
         errorStyle: 10.sp(color: Colors.red),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),

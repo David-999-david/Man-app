@@ -188,12 +188,22 @@ class HomeNotifier extends ChangeNotifier {
     }
   }
 
-  Future<bool> addNew(ImageSource source) async {
+  Future<bool> addNew() async {
     _msg = null;
     _loading = true;
     notifyListeners();
+
+    if (_picked == null) {
+      _msg = 'Please pick the image first';
+      print('Please print image first');
+      notifyListeners();
+      return false;
+    }
+
+    print('Image path => ${_picked!.path}');
+
     try {
-      final mimeType = await lookupMimeType(_picked!.path) ?? 'image/jpeg';
+      final mimeType = lookupMimeType(_picked!.path) ?? 'image/jpeg';
 
       final part = mimeType.split('/');
 
@@ -207,7 +217,15 @@ class HomeNotifier extends ChangeNotifier {
 
       final response = await TodoUsecase().addTodo(file);
 
+      if (response == null) {
+        print('Response is null from return of post create');
+      }
+
       _newTodo = response;
+
+      if (_newTodo == null) {
+        print('Error : new Todo is null');
+      }
 
       _todoList.insert(0, _newTodo!);
 
@@ -215,8 +233,10 @@ class HomeNotifier extends ChangeNotifier {
       descCtrl.clear();
       imageDescCtrl.clear();
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
       _msg = e.toString();
+      print('$stackTrace');
+      print('$e');
       return false;
     } finally {
       _loading = false;
@@ -276,6 +296,12 @@ class HomeNotifier extends ChangeNotifier {
       titleCtrl.text = editTodo!.title;
       descCtrl.text = editTodo!.description;
       _completed = editTodo!.completed;
+      if (editTodo!.imageUrl.isNotEmpty) {
+        imageDescCtrl.text = editTodo!.imageUrl.first.imageDesc ?? '';
+        _imageUrl = '';
+      } else {
+        imageDescCtrl.text = '';
+      }
     }
   }
 
@@ -289,12 +315,25 @@ class HomeNotifier extends ChangeNotifier {
     _loading = true;
     notifyListeners();
     try {
-      final editedTodo = await TodoUsecase().editTodo(
-          editTodo!.id,
-          EdiitTodo(
-              title: titleCtrl.text,
-              description: descCtrl.text,
-              completed: _completed));
+      final map = {
+        'title': titleCtrl.text,
+        'description': descCtrl.text,
+        'completed': _completed,
+        'imageDesc': imageDescCtrl.text
+      };
+
+      if (_picked != null) {
+        final mimeType = lookupMimeType(_picked!.path) ?? 'image/jpeg';
+
+        final part = mimeType!.split('/');
+
+        map['file'] = await MultipartFile.fromFile(_picked!.path,
+            filename: _picked!.name, contentType: MediaType(part[0], part[1]));
+      }
+
+      final form = FormData.fromMap(map);
+
+      final editedTodo = await TodoUsecase().editTodo(editTodo!.id, form);
       final editTodoIndex =
           _todoList.indexWhere((todo) => todo.id == editedTodo.id);
       if (editTodoIndex != -1) {

@@ -95,14 +95,14 @@ class TodoImage {
 //   }
 // }
 
-class EdiitTodo {
-  final String? title;
-  final String? description;
-  final bool? completed;
+// class EdiitTodo {
+//   final String? title;
+//   final String? description;
+//   final bool? completed;
 
-  EdiitTodo({this.title, this.description, this.completed});
+//   EdiitTodo({this.title, this.description, this.completed});
 
-  Map<String, dynamic> toJson() {
-    return {'title': title, 'description': description, 'completed': completed};
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     return {'title': title, 'description': description, 'completed': completed};
+//   }
+// }

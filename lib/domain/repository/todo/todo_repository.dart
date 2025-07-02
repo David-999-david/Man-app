@@ -15,7 +15,7 @@ class TodoRepository {
     return TodoRemote().getTodoById(id);
   }
 
-  Future<TodoModel> editTodo(int id, EdiitTodo todo) {
+  Future<TodoModel> editTodo(int id, FormData todo) {
     return TodoRemote().editTodo(id, todo);
   }
 
