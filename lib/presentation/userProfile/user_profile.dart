@@ -105,7 +105,8 @@ class UserProfile extends StatelessWidget {
                               () {
                             AppNavigator.push(context, Contact());
                           }),
-                          _userSettings(Icons.headset_rounded, 'Music', () {}),
+                          _userSettings(
+                              Icons.location_on_outlined, 'Address', () {}),
                           _userSettings(Icons.movie, 'Movie', () {}),
                           _userSettings(
                               Icons.hide_image_rounded, 'Hide', () {}),

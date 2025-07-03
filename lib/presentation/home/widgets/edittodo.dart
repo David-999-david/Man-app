@@ -19,7 +19,7 @@ class Edittodo extends StatelessWidget {
     return Consumer<HomeNotifier>(
       builder: (context, provider, child) {
         return Scaffold(
-          body: provider.onEditLoaidng
+          body: provider.onEditLoaidng 
               ? LoadingShow()
               : Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),

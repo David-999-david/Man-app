@@ -267,7 +267,8 @@ Widget _todoItem(HomeNotifier provider, BuildContext scafflodCtx) {
           final currentTodo = provider.todoList[index];
           final isSelected = provider.selectedTodo.contains(currentTodo);
           final todoImagesList = provider.todoList[index].imageUrl;
-          return provider.isEditing(currentTodo.id)
+          return provider.isEditing(currentTodo.id) ||
+                  provider.onRemove(currentTodo.id)
               ? LoadingShow()
               : Slidable(
                   key: ValueKey(currentTodo.id),

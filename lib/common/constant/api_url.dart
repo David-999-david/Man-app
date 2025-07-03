@@ -38,4 +38,6 @@ class ApiUrl {
   static const uploadProfile = 'auth/upload/avatar';
 
   static const editTodoStatus = 'todos/status/';
+
+  static const addAddress = 'address/';
 }

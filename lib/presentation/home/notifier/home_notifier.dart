@@ -357,9 +357,12 @@ class HomeNotifier extends ChangeNotifier {
     }
   }
 
+  final Set<int> _removeIds = {};
+  bool onRemove(int id) => _removeIds.contains(id);
+
   Future<bool> removeOne(TodoModel removeTodo) async {
     _msg = null;
-    _loading = true;
+    _removeIds.add(removeTodo.id);
     notifyListeners();
     try {
       await TodoUsecase().removeById(removeTodo.id);
@@ -370,6 +373,7 @@ class HomeNotifier extends ChangeNotifier {
       return false;
     } finally {
       _loading = false;
+      _removeIds.remove(removeTodo.id);
       notifyListeners();
     }
   }
