@@ -6,4 +6,8 @@ class AddressUsecase {
   Future<AddressModel> createAddress(FormData form) async {
     return await AddressRepository().createAddress(form);
   }
+
+  Future<List<AddressModel>> getAllAddress() async {
+    return await AddressRepository().getAllAddress();
+  }
 }

@@ -6,4 +6,8 @@ class AddressRepository {
   Future<AddressModel> createAddress(FormData form) {
     return AddressRemote().createAddress(form);
   }
+
+  Future<List<AddressModel>> getAllAddress() {
+    return AddressRemote().getAllAddress();
+  }
 }

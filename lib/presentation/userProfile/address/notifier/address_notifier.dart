@@ -138,9 +138,6 @@ class AddressNotifier extends ChangeNotifier {
     }
   }
 
-  List<AddressModel> _addressList = [];
-  List<AddressModel> get addressList => _addressList;
-
   Future<void> onPick(ImageSource soucre) async {
     if (!await requestGalleryAndCameraPer(soucre)) {
       throw Exception('Camera or gallery permission is rejected');
@@ -155,7 +152,7 @@ class AddressNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void createAddress() async {
+  Future<bool> createAddress() async {
     _loading = true;
     notifyListeners();
     try {
@@ -183,6 +180,8 @@ class AddressNotifier extends ChangeNotifier {
       final created = await AddressUsecase().createAddress(form);
 
       _addressList.insert(0, created);
+      notifyListeners();
+
       labelCtrl.clear();
       streetCtrl.clear();
       cityCtrl.clear();
@@ -192,8 +191,11 @@ class AddressNotifier extends ChangeNotifier {
       imageDescCtrl.clear();
       _imageUrl = '';
       _picked = null;
+
+      return true;
     } catch (e) {
       _msg = e.toString();
+      return false;
     } finally {
       _loading = false;
       notifyListeners();
@@ -210,5 +212,21 @@ class AddressNotifier extends ChangeNotifier {
     postalCtrl.dispose();
     imageDescCtrl.dispose();
     super.dispose();
+  }
+
+  List<AddressModel> _addressList = [];
+  List<AddressModel> get addressList => _addressList;
+
+  void getAllAddress() async {
+    _loading = true;
+    notifyListeners();
+    try {
+      _addressList = await AddressUsecase().getAllAddress();
+    } catch (e) {
+      _msg = e.toString();
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
   }
 }

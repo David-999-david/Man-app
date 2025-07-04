@@ -40,4 +40,6 @@ class ApiUrl {
   static const editTodoStatus = 'todos/status/';
 
   static const addAddress = 'address/';
+
+  static const getAllAddress = 'address/';
 }

@@ -24,4 +24,26 @@ class AddressRemote {
       throw Exception('${e.response?.statusCode} : ${e.response?.data}');
     }
   }
+
+  Future<List<AddressModel>> getAllAddress() async {
+    try {
+      final response = await _dio.get(ApiUrl.getAllAddress);
+
+      final status = response.statusCode!;
+
+      if (status >= 200 && status < 300) {
+        final data = response.data['allAddress'] as List<dynamic>;
+
+        return data
+            .map((item) => AddressModel.fromJson(item as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception(
+            'Error => status=$status, message => ${response.data['error']}');
+      }
+    } on DioException catch (e) {
+      throw Exception(
+          '${e.response?.statusCode} : ${e.response?.data['error']}');
+    }
+  }
 }
