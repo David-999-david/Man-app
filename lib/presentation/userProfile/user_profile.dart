@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
 import 'package:user_auth/presentation/userProfile/addedProfile/add_profile_image.dart';
+import 'package:user_auth/presentation/userProfile/address/create_address/create_address.dart';
 import 'package:user_auth/presentation/userProfile/contact/contact.dart';
 import 'package:user_auth/presentation/userProfile/notifier/user_notifier.dart';
 import 'package:user_auth/presentation/widgets/loading_show.dart';
@@ -105,8 +106,10 @@ class UserProfile extends StatelessWidget {
                               () {
                             AppNavigator.push(context, Contact());
                           }),
-                          _userSettings(
-                              Icons.location_on_outlined, 'Address', () {}),
+                          _userSettings(Icons.location_on_outlined, 'Address',
+                              () {
+                            AppNavigator.push(context, CreateAddress());
+                          }),
                           _userSettings(Icons.movie, 'Movie', () {}),
                           _userSettings(
                               Icons.hide_image_rounded, 'Hide', () {}),
