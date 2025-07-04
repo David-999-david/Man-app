@@ -42,4 +42,6 @@ class ApiUrl {
   static const addAddress = 'address/';
 
   static const getAllAddress = 'address/';
+
+  static const updateAddress = 'address/';
 }

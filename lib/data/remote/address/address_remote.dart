@@ -46,4 +46,25 @@ class AddressRemote {
           '${e.response?.statusCode} : ${e.response?.data['error']}');
     }
   }
+
+  Future<AddressModel> editAddress(int id, FormData form) async {
+    try {
+      final response = await _dio.put('${ApiUrl.updateAddress}$id',
+          data: form, options: Options(contentType: 'multipart/form-data'));
+
+      final status = response.statusCode!;
+
+      if (status >= 200 && status < 300) {
+        final data = response.data['data'] as Map<String, dynamic>;
+
+        return AddressModel.fromJson(data);
+      } else {
+        throw Exception(
+            'Error => status=$status, message : ${response.data['error']}');
+      }
+    } on DioException catch (e) {
+      throw Exception(
+          '${e.response?.statusCode} : ${e.response?.data['error']}');
+    }
+  }
 }

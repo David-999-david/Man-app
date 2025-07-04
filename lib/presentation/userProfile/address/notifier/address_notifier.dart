@@ -12,6 +12,10 @@ import 'package:user_auth/data/model/address/address_model.dart';
 import 'package:user_auth/domain/usecase/address/address_usecase.dart';
 
 class AddressNotifier extends ChangeNotifier {
+  AddressNotifier({this.editAddress});
+
+  AddressModel? editAddress;
+
   bool _loading = false;
   bool get loading => _loading;
 
@@ -227,6 +231,25 @@ class AddressNotifier extends ChangeNotifier {
     } finally {
       _loading = false;
       notifyListeners();
+    }
+  }
+
+  void loadOld() {
+    if (editAddress != null) {
+      labelCtrl.text = editAddress!.label.toString();
+
+      streetCtrl.text = editAddress!.street;
+      cityCtrl.text = editAddress!.city;
+      stateCtrl.text = editAddress!.state;
+      countryCtrl.text = editAddress!.country;
+      postalCtrl.text = editAddress!.postalCode;
+      if (editAddress!.addressImage.isNotEmpty) {
+        _imageUrl = editAddress!.addressImage.first.url;
+        imageDescCtrl.text = editAddress!.addressImage.first.description;
+      } else {
+        _imageUrl = '';
+        imageDescCtrl.text = '';
+      }
     }
   }
 }

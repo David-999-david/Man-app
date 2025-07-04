@@ -10,4 +10,8 @@ class AddressRepository {
   Future<List<AddressModel>> getAllAddress() {
     return AddressRemote().getAllAddress();
   }
+
+  Future<AddressModel> editAddress(int id, FormData form) {
+    return AddressRemote().editAddress(id, form);
+  }
 }

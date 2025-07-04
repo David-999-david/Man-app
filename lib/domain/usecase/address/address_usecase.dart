@@ -10,4 +10,8 @@ class AddressUsecase {
   Future<List<AddressModel>> getAllAddress() async {
     return await AddressRepository().getAllAddress();
   }
+
+  Future<AddressModel> editAddress(int id, FormData form) async {
+    return await AddressRepository().editAddress(id, form);
+  }
 }
