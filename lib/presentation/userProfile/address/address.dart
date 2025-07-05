@@ -71,6 +71,7 @@ Widget _addressCard(AddressModel address, BuildContext context) {
             context: (context),
             isDismissible: false,
             enableDrag: false,
+            isScrollControlled: true,
             builder: (context) {
               return ChangeNotifierProvider.value(
                 value: AddressNotifier(editAddress: address)..loadOld(),

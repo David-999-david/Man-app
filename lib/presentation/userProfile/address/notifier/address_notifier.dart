@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -151,8 +152,25 @@ class AddressNotifier extends ChangeNotifier {
 
     if (picked == null) return;
 
-    _picked = picked;
-    _imageUrl = picked.path;
+    final cropped = await ImageCropper().cropImage(
+        sourcePath: picked.path,
+        compressFormat: ImageCompressFormat.jpg,
+        compressQuality: 90,
+        maxHeight: 800,
+        maxWidth: 800,
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false,
+              cropFrameColor: Colors.tealAccent),
+          IOSUiSettings(title: 'Crop Image')
+        ]);
+
+    if (cropped == null) return;
+
+    _picked = XFile(cropped.path);
+    _imageUrl = cropped.path;
     notifyListeners();
   }
 
