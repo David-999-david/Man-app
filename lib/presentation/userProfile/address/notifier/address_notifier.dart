@@ -270,4 +270,55 @@ class AddressNotifier extends ChangeNotifier {
       }
     }
   }
+
+  Future<bool> updateAddress() async {
+    _loading = true;
+    notifyListeners();
+    try {
+      final Map<String, dynamic> map = {
+        'label': labelCtrl.text,
+        'street': streetCtrl.text,
+        'city': cityCtrl.text,
+        'state': stateCtrl.text,
+        'country': countryCtrl.text,
+        'postalCode': postalCtrl.text,
+        'imageDesc': imageDescCtrl.text
+      };
+
+      if (_picked != null) {
+        final mimeType = lookupMimeType(_picked!.path) ?? 'image/jpeg';
+
+        final part = mimeType.split('/');
+
+        map['file'] = await MultipartFile.fromFile(_picked!.path,
+            filename: _picked!.name, contentType: MediaType(part[0], part[1]));
+      }
+
+      final form = FormData.fromMap(map);
+
+      final edited = await AddressUsecase().editAddress(editAddress!.id!, form);
+
+      final idx = _addressList.indexWhere((add) => add.id == edited.id);
+
+      if (idx != -1) {
+        _addressList[idx] = edited;
+        notifyListeners();
+      }
+
+      imageDescCtrl.clear();
+      labelCtrl.clear();
+      streetCtrl.clear();
+      cityCtrl.clear();
+      stateCtrl.clear();
+      countryCtrl.clear();
+      postalCtrl.clear();
+      return true;
+    } catch (e) {
+      _msg = e.toString();
+      return false;
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+  }
 }

@@ -7,6 +7,7 @@ import 'package:user_auth/data/model/address/address_model.dart';
 import 'package:user_auth/presentation/userProfile/address/create_address/create_address.dart';
 import 'package:user_auth/presentation/userProfile/address/edit_address/edit_address.dart';
 import 'package:user_auth/presentation/userProfile/address/notifier/address_notifier.dart';
+import 'package:user_auth/presentation/widgets/loading_show.dart';
 
 class Address extends StatelessWidget {
   const Address({super.key});
@@ -18,21 +19,23 @@ class Address extends StatelessWidget {
       child: Consumer<AddressNotifier>(
         builder: (context, notifier, child) {
           return Scaffold(
-            backgroundColor: Colors.white,
-            body: Padding(
-              padding: const EdgeInsets.fromLTRB(15, 30, 15, 20),
-              child: ListView.separated(
-                  itemBuilder: (context, index) {
-                    final address = notifier.addressList[index];
-                    return _addressCard(address, context);
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(
-                      height: 10,
-                    );
-                  },
-                  itemCount: notifier.addressList.length),
-            ),
+            backgroundColor: Color(0xffB8CFCE),
+            body: notifier.loading
+                ? LoadingShow()
+                : Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 30, 15, 20),
+                    child: ListView.separated(
+                        itemBuilder: (context, index) {
+                          final address = notifier.addressList[index];
+                          return _addressCard(address, context, notifier);
+                        },
+                        separatorBuilder: (context, index) {
+                          return SizedBox(
+                            height: 10,
+                          );
+                        },
+                        itemCount: notifier.addressList.length),
+                  ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.miniEndDocked,
             floatingActionButton: FloatingActionButton(
@@ -60,25 +63,29 @@ class Address extends StatelessWidget {
   }
 }
 
-Widget _addressCard(AddressModel address, BuildContext context) {
+Widget _addressCard(
+    AddressModel address, BuildContext context, AddressNotifier notifier) {
   return Slidable(
     key: ValueKey(address.id),
     endActionPane:
         ActionPane(motion: DrawerMotion(), extentRatio: 0.12, children: [
       SlidableAction(
-        onPressed: (_) {
-          showModalBottomSheet(
+        onPressed: (_) async {
+          final didSuccess = await showModalBottomSheet<bool>(
             context: (context),
             isDismissible: false,
             enableDrag: false,
             isScrollControlled: true,
             builder: (context) {
-              return ChangeNotifierProvider.value(
-                value: AddressNotifier(editAddress: address)..loadOld(),
+              return ChangeNotifierProvider(
+                create: (_) => AddressNotifier(editAddress: address)..loadOld(),
                 child: EditAddress(),
               );
             },
           );
+          if (didSuccess == true) {
+            notifier.getAllAddress();
+          }
         },
         backgroundColor: Colors.greenAccent,
         icon: Icons.edit_location_sharp,

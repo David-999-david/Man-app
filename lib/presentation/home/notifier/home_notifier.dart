@@ -329,7 +329,7 @@ class HomeNotifier extends ChangeNotifier {
       if (_picked != null) {
         final mimeType = lookupMimeType(_picked!.path) ?? 'image/jpeg';
 
-        final part = mimeType!.split('/');
+        final part = mimeType.split('/');
 
         map['file'] = await MultipartFile.fromFile(_picked!.path,
             filename: _picked!.name, contentType: MediaType(part[0], part[1]));

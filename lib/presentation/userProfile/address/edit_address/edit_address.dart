@@ -3,11 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
 import 'package:user_auth/presentation/userProfile/address/notifier/address_notifier.dart';
 
 class EditAddress extends StatelessWidget {
   const EditAddress({super.key});
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +35,7 @@ class EditAddress extends StatelessWidget {
                     children: [
                       Container(
                         height: 250,
-                        width: 180,
+                        width: 250,
                         decoration: BoxDecoration(
                             image: notifier.picked != null
                                 ? DecorationImage(
@@ -225,7 +228,13 @@ class EditAddress extends StatelessWidget {
                               backgroundColor: Colors.transparent,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8))),
-                          onPressed: () {},
+                          onPressed: () async {
+                            final success = await notifier.updateAddress();
+
+                            if (success) {
+                              AppNavigator.pop(context, success);
+                            }
+                          },
                           child: Text(
                             'UPDATE',
                             style: 17.sp(color: Colors.white),
