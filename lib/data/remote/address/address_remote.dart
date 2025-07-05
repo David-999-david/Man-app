@@ -67,4 +67,24 @@ class AddressRemote {
           '${e.response?.statusCode} : ${e.response?.data['error']}');
     }
   }
+
+  Future<String> removeAddress(int id) async {
+    try {
+      final response = await _dio.delete('${ApiUrl.removeAddress}$id');
+
+      final status = response.statusCode!;
+
+      if (status >= 200 && status < 300) {
+        final data = response.data['message'] as String;
+
+        return data;
+      } else {
+        throw Exception(
+            'Error : status=$status, message=${response.data['error']}');
+      }
+    } on DioException catch (e) {
+      throw Exception(
+          '${e.response?.statusCode} : ${e.response?.data['error']}');
+    }
+  }
 }

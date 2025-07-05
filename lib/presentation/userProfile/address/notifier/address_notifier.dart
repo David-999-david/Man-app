@@ -321,4 +321,28 @@ class AddressNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<bool> removeAddress(AddressModel address) async {
+    _loading = true;
+    notifyListeners();
+    try {
+      final response = await AddressUsecase().removeAddress(address.id!);
+
+      _msg = response;
+
+      final idx = _addressList.indexWhere((item) => item.id == address.id);
+
+      if (idx != -1) {
+        _addressList.removeAt(idx);
+        notifyListeners();
+      }
+      return true;
+    } catch (e) {
+      _msg = e.toString();
+      return false;
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+  }
 }

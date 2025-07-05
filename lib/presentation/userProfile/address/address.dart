@@ -68,7 +68,7 @@ Widget _addressCard(
   return Slidable(
     key: ValueKey(address.id),
     endActionPane:
-        ActionPane(motion: DrawerMotion(), extentRatio: 0.12, children: [
+        ActionPane(motion: DrawerMotion(), extentRatio: 0.23, children: [
       SlidableAction(
         onPressed: (_) async {
           final didSuccess = await showModalBottomSheet<bool>(
@@ -89,6 +89,20 @@ Widget _addressCard(
         },
         backgroundColor: Colors.greenAccent,
         icon: Icons.edit_location_sharp,
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      SlidableAction(
+        onPressed: (_) async {
+          final messenger = ScaffoldMessenger.of(context);
+          final success = await notifier.removeAddress(address);
+
+          if (success) {
+            messenger.showSnackBar(SnackBar(content: Text(notifier.msg!)));
+          }
+        },
+        backgroundColor: Colors.red,
+        icon: Icons.clear,
         padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
         borderRadius: BorderRadius.circular(10),
       )

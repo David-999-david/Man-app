@@ -14,4 +14,8 @@ class AddressRepository {
   Future<AddressModel> editAddress(int id, FormData form) {
     return AddressRemote().editAddress(id, form);
   }
+
+  Future<String> removeAddress(int id) {
+    return AddressRemote().removeAddress(id);
+  }
 }

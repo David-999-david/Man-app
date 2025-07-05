@@ -14,4 +14,8 @@ class AddressUsecase {
   Future<AddressModel> editAddress(int id, FormData form) async {
     return await AddressRepository().editAddress(id, form);
   }
+
+  Future<String> removeAddress(int id) async {
+    return await AddressRepository().removeAddress(id);
+  }
 }
