@@ -257,9 +257,9 @@ class AddressNotifier extends ChangeNotifier {
       labelCtrl.text = editAddress!.label.toString();
 
       streetCtrl.text = editAddress!.street;
-      cityCtrl.text = editAddress!.city;
+      cityCtrl.text = editAddress!.city.toUpperCase();
       stateCtrl.text = editAddress!.state;
-      countryCtrl.text = editAddress!.country;
+      countryCtrl.text = editAddress!.country.toUpperCase();
       postalCtrl.text = editAddress!.postalCode;
       if (editAddress!.addressImage.isNotEmpty) {
         _imageUrl = editAddress!.addressImage.first.url;
