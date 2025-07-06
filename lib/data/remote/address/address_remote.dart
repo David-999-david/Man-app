@@ -87,4 +87,28 @@ class AddressRemote {
           '${e.response?.statusCode} : ${e.response?.data['error']}');
     }
   }
+
+  Future<List<ReturnTestAddress>> createMany(List<TestAddress> items) async {
+    try {
+      final response = await _dio.post(ApiUrl.createManyAddress,
+          data: {'items': items.map((item) => item.toJson()).toList()});
+
+      final status = response.statusCode!;
+
+      if (status >= 200 && status < 300) {
+        final data = response.data['data'] as List<dynamic>;
+
+        return data
+            .map((item) =>
+                ReturnTestAddress.fromJson(item as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception(
+            'Error => status=$status, message: ${response.data['error']}');
+      }
+    } on DioException catch (e) {
+      throw Exception(
+          '${e.response?.statusCode} : ${e.response?.data['error']}');
+    }
+  }
 }

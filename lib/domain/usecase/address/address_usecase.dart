@@ -18,4 +18,8 @@ class AddressUsecase {
   Future<String> removeAddress(int id) async {
     return await AddressRepository().removeAddress(id);
   }
+
+  Future<List<ReturnTestAddress>> createMany(List<TestAddress> items) async {
+    return await AddressRepository().createMany(items);
+  }
 }

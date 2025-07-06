@@ -65,159 +65,167 @@ class Address extends StatelessWidget {
 
 Widget _addressCard(
     AddressModel address, BuildContext context, AddressNotifier notifier) {
-  return Slidable(
-    key: ValueKey(address.id),
-    endActionPane:
-        ActionPane(motion: DrawerMotion(), extentRatio: 0.23, children: [
-      SlidableAction(
-        onPressed: (_) async {
-          final didSuccess = await showModalBottomSheet<bool>(
-            context: (context),
-            isDismissible: false,
-            enableDrag: false,
-            isScrollControlled: true,
-            builder: (context) {
-              return ChangeNotifierProvider(
-                create: (_) => AddressNotifier(editAddress: address)..loadOld(),
-                child: EditAddress(),
-              );
-            },
-          );
-          if (didSuccess == true) {
-            notifier.getAllAddress();
-          }
-        },
-        backgroundColor: Colors.greenAccent,
-        icon: Icons.edit_location_sharp,
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      SlidableAction(
-        onPressed: (_) async {
-          final messenger = ScaffoldMessenger.of(context);
-          final success = await notifier.removeAddress(address);
-
-          if (success) {
-            messenger.showSnackBar(SnackBar(content: Text(notifier.msg!)));
-          }
-        },
-        backgroundColor: Colors.red,
-        icon: Icons.clear,
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-        borderRadius: BorderRadius.circular(10),
-      )
-    ]),
-    child: Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.teal,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.lightGreenAccent)),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-              child: Container(
-                height: 130,
-                width: 100,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                    image: address.addressImage.isEmpty
-                        ? null
-                        : DecorationImage(
-                            fit: BoxFit.cover,
-                            image:
-                                NetworkImage(address.addressImage.first.url))),
-                child: address.addressImage.isEmpty
-                    ? Icon(
-                        Icons.photo,
-                        size: 30,
-                      )
-                    : null,
-              ),
+  final onRemove = notifier.onRemove(address.id!);
+  return onRemove
+      ? LoadingShow()
+      : Slidable(
+          key: ValueKey(address.id),
+          endActionPane:
+              ActionPane(motion: DrawerMotion(), extentRatio: 0.23, children: [
+            SlidableAction(
+              onPressed: (_) async {
+                final didSuccess = await showModalBottomSheet<bool>(
+                  context: (context),
+                  isDismissible: false,
+                  enableDrag: false,
+                  isScrollControlled: true,
+                  builder: (context) {
+                    return ChangeNotifierProvider(
+                      create: (_) =>
+                          AddressNotifier(editAddress: address)..loadOld(),
+                      child: EditAddress(),
+                    );
+                  },
+                );
+                if (didSuccess == true) {
+                  notifier.getAllAddress();
+                }
+              },
+              backgroundColor: Colors.greenAccent,
+              icon: Icons.edit_location_sharp,
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+              borderRadius: BorderRadius.circular(10),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 10, 5, 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          address.label.toString().isNotEmpty
-                              ? address.label.toString().toUpperCase()
-                              : 'Unknown',
-                          style: 17.sp(
-                              color: address.label.toString().isNotEmpty
-                                  ? Colors.black
-                                  : Colors.grey),
-                        ),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Text(
-                          address.street.isNotEmpty
-                              ? address.street
-                              : 'Unknown',
-                          style: 13.sp(
-                              color: address.street.isNotEmpty
-                                  ? Colors.black
-                                  : Colors.grey),
-                        ),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Text(address.city.isNotEmpty ? address.city : 'Unknown',
-                            style: 13.sp(
-                                color: address.city.isNotEmpty
-                                    ? Colors.black
-                                    : Colors.grey)),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Text(
-                            address.state.isNotEmpty
-                                ? address.state
-                                : 'Unknown',
-                            style: 13.sp(
-                                color: address.state.isNotEmpty
-                                    ? Colors.black
-                                    : Colors.grey)),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Text(
-                            address.country.isNotEmpty
-                                ? address.country
-                                : 'Unknown',
-                            style: 13.sp(
-                                color: address.country.isNotEmpty
-                                    ? Colors.black
-                                    : Colors.grey)),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Text(
-                            address.postalCode.isNotEmpty
-                                ? address.postalCode
-                                : 'Unknown',
-                            style: 13.sp(
-                                color: address.postalCode.isNotEmpty
-                                    ? Colors.black
-                                    : Colors.grey))
-                      ],
+            SlidableAction(
+              onPressed: (_) async {
+                final messenger = ScaffoldMessenger.of(context);
+                final success = await notifier.removeAddress(address);
+
+                if (success) {
+                  messenger
+                      .showSnackBar(SnackBar(content: Text(notifier.msg!)));
+                }
+              },
+              backgroundColor: Colors.red,
+              icon: Icons.clear,
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+              borderRadius: BorderRadius.circular(10),
+            )
+          ]),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.teal,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.lightGreenAccent)),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Container(
+                      height: 130,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                          image: address.addressImage.isEmpty
+                              ? null
+                              : DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(
+                                      address.addressImage.first.url))),
+                      child: address.addressImage.isEmpty
+                          ? Icon(
+                              Icons.photo,
+                              size: 30,
+                            )
+                          : null,
                     ),
                   ),
-                ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 10, 5, 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                address.label.toString().isNotEmpty
+                                    ? address.label.toString().toUpperCase()
+                                    : 'Unknown',
+                                style: 17.sp(
+                                    color: address.label.toString().isNotEmpty
+                                        ? Colors.black
+                                        : Colors.grey),
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                address.street.isNotEmpty
+                                    ? address.street
+                                    : 'Unknown',
+                                style: 13.sp(
+                                    color: address.street.isNotEmpty
+                                        ? Colors.black
+                                        : Colors.grey),
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                  address.city.isNotEmpty
+                                      ? address.city
+                                      : 'Unknown',
+                                  style: 13.sp(
+                                      color: address.city.isNotEmpty
+                                          ? Colors.black
+                                          : Colors.grey)),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                  address.state.isNotEmpty
+                                      ? address.state
+                                      : 'Unknown',
+                                  style: 13.sp(
+                                      color: address.state.isNotEmpty
+                                          ? Colors.black
+                                          : Colors.grey)),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                  address.country.isNotEmpty
+                                      ? address.country
+                                      : 'Unknown',
+                                  style: 13.sp(
+                                      color: address.country.isNotEmpty
+                                          ? Colors.black
+                                          : Colors.grey)),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                  address.postalCode.isNotEmpty
+                                      ? address.postalCode
+                                      : 'Unknown',
+                                  style: 13.sp(
+                                      color: address.postalCode.isNotEmpty
+                                          ? Colors.black
+                                          : Colors.grey))
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
-            )
-          ],
-        ),
-      ),
-    ),
-  );
+            ),
+          ),
+        );
 }

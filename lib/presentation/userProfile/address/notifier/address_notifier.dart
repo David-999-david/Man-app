@@ -322,8 +322,11 @@ class AddressNotifier extends ChangeNotifier {
     }
   }
 
+  Set<int> removeIds = {};
+  bool onRemove(int id) => removeIds.contains(id);
+
   Future<bool> removeAddress(AddressModel address) async {
-    _loading = true;
+    removeIds.add(address.id!);
     notifyListeners();
     try {
       final response = await AddressUsecase().removeAddress(address.id!);
@@ -336,6 +339,72 @@ class AddressNotifier extends ChangeNotifier {
         _addressList.removeAt(idx);
         notifyListeners();
       }
+      return true;
+    } catch (e) {
+      _msg = e.toString();
+      return false;
+    } finally {
+      removeIds.remove(address.id);
+      notifyListeners();
+    }
+  }
+
+  final List<TextEditingController> _label = [TextEditingController()];
+  final List<TextEditingController> _street = [TextEditingController()];
+  final List<TextEditingController> _city = [TextEditingController()];
+  final List<TextEditingController> _state = [TextEditingController()];
+  final List<TextEditingController> _country = [TextEditingController()];
+  final List<TextEditingController> _postal = [TextEditingController()];
+
+  List<TextEditingController> get label => _label;
+  List<TextEditingController> get street => _street;
+  List<TextEditingController> get city => _city;
+  List<TextEditingController> get state => _state;
+  List<TextEditingController> get country => _country;
+  List<TextEditingController> get postal => _postal;
+
+  int _count = 1;
+  int get count => _count;
+
+  void callNew() {
+    _label.add(TextEditingController());
+    _street.add(TextEditingController());
+    _city.add(TextEditingController());
+    _state.add(TextEditingController());
+    _country.add(TextEditingController());
+    _postal.add(TextEditingController());
+    _count++;
+    notifyListeners();
+  }
+
+  void undo() {
+    if (_count <= 1) return;
+    _label.removeLast();
+    _street.removeLast();
+    _city.removeLast();
+    _state.removeLast();
+    _country.removeLast();
+    _postal.removeLast();
+    _count--;
+    notifyListeners();
+  }
+
+  Future<bool> createMany() async {
+    _loading = true;
+    notifyListeners();
+    try {
+      final List<TestAddress> items = List.generate(_count, (i) {
+        return TestAddress(
+            label: _label[i].text,
+            street: _street[i].text,
+            city: _city[i].text,
+            state: _state[i].text,
+            country: _country[i].text,
+            postalCode: _postal[i].text);
+      });
+
+      await AddressUsecase().createMany(items);
+
       return true;
     } catch (e) {
       _msg = e.toString();

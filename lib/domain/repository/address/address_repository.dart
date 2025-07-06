@@ -18,4 +18,8 @@ class AddressRepository {
   Future<String> removeAddress(int id) {
     return AddressRemote().removeAddress(id);
   }
+
+  Future<List<ReturnTestAddress>> createMany(List<TestAddress> items) {
+    return AddressRemote().createMany(items);
+  }
 }

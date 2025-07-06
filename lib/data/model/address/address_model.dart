@@ -60,3 +60,61 @@ class PickAddress {
       required this.country,
       required this.postalCode});
 }
+
+class TestAddress {
+  final String label;
+  final String street;
+  final String city;
+  final String state;
+  final String country;
+  final String postalCode;
+
+  TestAddress(
+      {required this.label,
+      required this.street,
+      required this.city,
+      required this.state,
+      required this.country,
+      required this.postalCode});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'label': label,
+      'street': street,
+      'city': city,
+      'state': state,
+      'country': country,
+      'postalCode': postalCode
+    };
+  }
+}
+
+class ReturnTestAddress {
+  final int id;
+  final String label;
+  final String street;
+  final String city;
+  final String state;
+  final String country;
+  final String postalCode;
+
+  ReturnTestAddress(
+      {required this.id,
+      required this.label,
+      required this.street,
+      required this.city,
+      required this.state,
+      required this.country,
+      required this.postalCode});
+
+  factory ReturnTestAddress.fromJson(Map<String, dynamic> json) {
+    return ReturnTestAddress(
+        id: json['id'],
+        label: json['label'],
+        street: json['street'],
+        city: json['city'],
+        state: json['state'],
+        country: json['country'],
+        postalCode: json['postal_code']);
+  }
+}
