@@ -40,13 +40,14 @@ class Address extends StatelessWidget {
                 FloatingActionButtonLocation.miniEndDocked,
             floatingActionButton: FloatingActionButton(
               mini: true,
-              onPressed: () {
-                final didSuccess = AppNavigator.push<bool>(
+              onPressed: () async {
+                final didSuccess = await AppNavigator.push<bool>(
                     context,
                     ChangeNotifierProvider.value(
                       value: notifier,
                       child: CreateAddress(),
                     ));
+                notifier.countRefresh();
                 if (didSuccess == true) {
                   notifier.getAllAddress();
                 }
@@ -66,7 +67,15 @@ class Address extends StatelessWidget {
 Widget _addressCard(
     AddressModel address, BuildContext context, AddressNotifier notifier) {
   final onRemove = notifier.onRemove(address.id!);
-  return onRemove
+  String? firstUrl =
+      address.addressImage.isNotEmpty ? address.addressImage.first.url : null;
+
+  DecorationImage? bg;
+
+  if (firstUrl != null && firstUrl.isNotEmpty) {
+    bg = DecorationImage(image: NetworkImage(firstUrl), fit: BoxFit.cover);
+  }
+  return onRemove || notifier.onEdit(address.id!) == true
       ? LoadingShow()
       : Slidable(
           key: ValueKey(address.id),
@@ -129,13 +138,8 @@ Widget _addressCard(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
-                          image: address.addressImage.isEmpty
-                              ? null
-                              : DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                      address.addressImage.first.url))),
-                      child: address.addressImage.isEmpty
+                          image: bg),
+                      child: bg == null
                           ? Icon(
                               Icons.photo,
                               size: 30,

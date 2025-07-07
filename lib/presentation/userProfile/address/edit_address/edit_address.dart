@@ -10,12 +10,15 @@ import 'package:user_auth/presentation/userProfile/address/notifier/address_noti
 class EditAddress extends StatelessWidget {
   const EditAddress({super.key});
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Consumer<AddressNotifier>(
       builder: (context, notifier, child) {
+        DecorationImage? bg;
+        if (notifier.imageUrl != null && notifier.imageUrl!.isNotEmpty) {
+          bg = DecorationImage(
+              image: NetworkImage(notifier.imageUrl!), fit: BoxFit.cover);
+        }
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -34,25 +37,23 @@ class EditAddress extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        height: 250,
-                        width: 250,
-                        decoration: BoxDecoration(
+                          height: 250,
+                          width: 250,
+                          decoration: BoxDecoration(
+                            color: Color(0xFF7F8CAA),
                             image: notifier.picked != null
                                 ? DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: FileImage(File(notifier.imageUrl!)))
-                                : notifier.editAddress!.addressImage.isNotEmpty
-                                    ? DecorationImage(
-                                        image: NetworkImage(notifier
-                                            .editAddress!
-                                            .addressImage
-                                            .first
-                                            .url),
-                                        fit: BoxFit.cover)
-                                    : null,
-                            color: Color(0xFF7F8CAA),
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
+                                    image: FileImage(File(notifier.imageUrl!)),
+                                    fit: BoxFit.cover)
+                                : bg,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: bg == null
+                              ? Icon(
+                                  Icons.photo,
+                                  size: 30,
+                                )
+                              : null),
                       SizedBox(
                         height: 15,
                       ),

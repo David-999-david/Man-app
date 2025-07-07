@@ -35,14 +35,14 @@ class AddressModel {
 }
 
 class AddressImage {
-  final String url;
+  final String? url;
   final String description;
 
   AddressImage({required this.url, required this.description});
 
   factory AddressImage.fromJson(Map<String, dynamic> json) {
     return AddressImage(
-        url: json['url'] as String, description: json['imageDesc'] as String);
+        url: json['url'] as String?, description: json['imageDesc'] as String);
   }
 }
 
@@ -68,6 +68,7 @@ class TestAddress {
   final String state;
   final String country;
   final String postalCode;
+  final String imageDesc;
 
   TestAddress(
       {required this.label,
@@ -75,7 +76,8 @@ class TestAddress {
       required this.city,
       required this.state,
       required this.country,
-      required this.postalCode});
+      required this.postalCode,
+      required this.imageDesc});
 
   Map<String, dynamic> toJson() {
     return {
@@ -84,7 +86,8 @@ class TestAddress {
       'city': city,
       'state': state,
       'country': country,
-      'postalCode': postalCode
+      'postalCode': postalCode,
+      'imageDesc': imageDesc
     };
   }
 }
@@ -97,6 +100,7 @@ class ReturnTestAddress {
   final String state;
   final String country;
   final String postalCode;
+  final List<ReturnLocationImage> images;
 
   ReturnTestAddress(
       {required this.id,
@@ -105,7 +109,8 @@ class ReturnTestAddress {
       required this.city,
       required this.state,
       required this.country,
-      required this.postalCode});
+      required this.postalCode,
+      required this.images});
 
   factory ReturnTestAddress.fromJson(Map<String, dynamic> json) {
     return ReturnTestAddress(
@@ -115,6 +120,21 @@ class ReturnTestAddress {
         city: json['city'],
         state: json['state'],
         country: json['country'],
-        postalCode: json['postal_code']);
+        postalCode: json['postal_code'],
+        images: (json['images'] as List<dynamic>)
+            .map((item) => ReturnLocationImage.fromJson(item))
+            .toList());
+  }
+}
+
+class ReturnLocationImage {
+  final int id;
+  final String description;
+
+  ReturnLocationImage({required this.id, required this.description});
+
+  factory ReturnLocationImage.fromJson(Map<String, dynamic> json) {
+    return ReturnLocationImage(
+        id: json['id'] as int, description: json['description'] as String);
   }
 }

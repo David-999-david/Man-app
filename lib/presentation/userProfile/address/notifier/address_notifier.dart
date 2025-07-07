@@ -224,18 +224,6 @@ class AddressNotifier extends ChangeNotifier {
     }
   }
 
-  @override
-  void dispose() {
-    labelCtrl.dispose();
-    streetCtrl.dispose();
-    cityCtrl.dispose();
-    stateCtrl.dispose();
-    countryCtrl.dispose();
-    postalCtrl.dispose();
-    imageDescCtrl.dispose();
-    super.dispose();
-  }
-
   List<AddressModel> _addressList = [];
   List<AddressModel> get addressList => _addressList;
 
@@ -244,6 +232,7 @@ class AddressNotifier extends ChangeNotifier {
     notifyListeners();
     try {
       _addressList = await AddressUsecase().getAllAddress();
+      print('🏠 got ${_addressList.length} addresses');
     } catch (e) {
       _msg = e.toString();
     } finally {
@@ -271,8 +260,12 @@ class AddressNotifier extends ChangeNotifier {
     }
   }
 
+  Set<int> _oneditId = {};
+  bool onEdit(int id) => _oneditId.contains(id);
+
   Future<bool> updateAddress() async {
     _loading = true;
+    _oneditId.add(editAddress!.id!);
     notifyListeners();
     try {
       final Map<String, dynamic> map = {
@@ -317,6 +310,7 @@ class AddressNotifier extends ChangeNotifier {
       _msg = e.toString();
       return false;
     } finally {
+      _oneditId.remove(editAddress!.id!);
       _loading = false;
       notifyListeners();
     }
@@ -355,6 +349,7 @@ class AddressNotifier extends ChangeNotifier {
   final List<TextEditingController> _state = [TextEditingController()];
   final List<TextEditingController> _country = [TextEditingController()];
   final List<TextEditingController> _postal = [TextEditingController()];
+  final List<TextEditingController> _imageDesc = [TextEditingController()];
 
   List<TextEditingController> get label => _label;
   List<TextEditingController> get street => _street;
@@ -362,6 +357,7 @@ class AddressNotifier extends ChangeNotifier {
   List<TextEditingController> get state => _state;
   List<TextEditingController> get country => _country;
   List<TextEditingController> get postal => _postal;
+  List<TextEditingController> get imageDesc => _imageDesc;
 
   int _count = 1;
   int get count => _count;
@@ -373,6 +369,7 @@ class AddressNotifier extends ChangeNotifier {
     _state.add(TextEditingController());
     _country.add(TextEditingController());
     _postal.add(TextEditingController());
+    _imageDesc.add(TextEditingController());
     _count++;
     notifyListeners();
   }
@@ -385,6 +382,7 @@ class AddressNotifier extends ChangeNotifier {
     _state.removeLast();
     _country.removeLast();
     _postal.removeLast();
+    _imageDesc.removeLast();
     _count--;
     notifyListeners();
   }
@@ -400,10 +398,33 @@ class AddressNotifier extends ChangeNotifier {
             city: _city[i].text,
             state: _state[i].text,
             country: _country[i].text,
-            postalCode: _postal[i].text);
+            postalCode: _postal[i].text,
+            imageDesc: _imageDesc[i].text);
       });
 
       await AddressUsecase().createMany(items);
+
+      _label
+        ..clear()
+        ..add(TextEditingController());
+      _street
+        ..clear()
+        ..add(TextEditingController());
+      _city
+        ..clear()
+        ..add(TextEditingController());
+      _state
+        ..clear()
+        ..add(TextEditingController());
+      _country
+        ..clear()
+        ..add(TextEditingController());
+      _postal
+        ..clear()
+        ..add(TextEditingController());
+      _imageDesc
+        ..clear()
+        ..add(TextEditingController());
 
       return true;
     } catch (e) {
@@ -413,5 +434,22 @@ class AddressNotifier extends ChangeNotifier {
       _loading = false;
       notifyListeners();
     }
+  }
+
+  void countRefresh() {
+    _count = 1;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    for (final l in _label) l.dispose();
+    for (final l in _street) l.dispose();
+    for (final l in _city) l.dispose();
+    for (final l in _state) l.dispose();
+    for (final l in _country) l.dispose();
+    for (final l in _postal) l.dispose();
+    for (final l in _imageDesc) l.dispose();
   }
 }

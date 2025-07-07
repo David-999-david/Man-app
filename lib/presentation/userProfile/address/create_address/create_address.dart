@@ -361,12 +361,7 @@
 //   );
 // }
 
-
-
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
@@ -481,8 +476,17 @@ class CreateAddress extends StatelessWidget {
 }
 
 Widget _addressCard(AddressNotifier provider, int i) {
+  final last = i == provider.count - 1;
   return Column(
     children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: _textFormField(
+            provider, 'Image-Description', provider.imageDesc[i]),
+      ),
+      SizedBox(
+        height: 15,
+      ),
       Card(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(12, 20, 12, 20),
@@ -531,32 +535,32 @@ Widget _addressCard(AddressNotifier provider, int i) {
           ),
         ),
       ),
-      i == 0
-          ? Center(
-              child: IconButton(
-                  onPressed: () {
-                    provider.callNew();
-                  },
-                  icon: Icon(Icons.add)),
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      provider.undo();
-                    },
-                    icon: Icon(Icons.remove)),
-                SizedBox(
-                  width: 30,
-                ),
-                IconButton(
-                    onPressed: () {
-                      provider.callNew();
-                    },
-                    icon: Icon(Icons.add)),
-              ],
-            )
+      Center(
+          child: provider.count == 1
+              ? Center(
+                  child: IconButton(
+                      onPressed: () {
+                        provider.callNew();
+                      },
+                      icon: Icon(Icons.add)),
+                )
+              : last
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              provider.undo();
+                            },
+                            icon: Icon(Icons.remove)),
+                        IconButton(
+                            onPressed: () {
+                              provider.callNew();
+                            },
+                            icon: Icon(Icons.add))
+                      ],
+                    )
+                  : SizedBox.shrink())
     ],
   );
 }
@@ -570,7 +574,7 @@ Widget _labelTextFormField(
         filled: true,
         fillColor: Colors.transparent,
         hintText: hint,
-        hintStyle: 14.sp(),
+        hintStyle: 14.sp(color: Colors.grey),
         contentPadding: EdgeInsets.symmetric(horizontal: 10),
         errorStyle: 11.sp(color: Colors.red),
         border: OutlineInputBorder(
@@ -601,7 +605,7 @@ Widget _textFormField(
         filled: true,
         fillColor: Colors.transparent,
         hintText: hint,
-        hintStyle: 14.sp(),
+        hintStyle: 14.sp(color: Colors.grey),
         contentPadding: EdgeInsets.symmetric(horizontal: 10),
         errorStyle: 11.sp(color: Colors.red),
         border: UnderlineInputBorder(
@@ -626,7 +630,7 @@ Widget _textFormField2(
         filled: true,
         fillColor: Colors.transparent,
         hintText: hint,
-        hintStyle: 14.sp(),
+        hintStyle: 14.sp(color: Colors.grey),
         contentPadding: EdgeInsets.symmetric(horizontal: 10),
         errorStyle: 11.sp(color: Colors.red),
         border: UnderlineInputBorder(
@@ -651,7 +655,7 @@ Widget _textFormFieldV(AddressNotifier provider, String hint, String label,
         filled: true,
         fillColor: Colors.transparent,
         hintText: hint,
-        hintStyle: 14.sp(),
+        hintStyle: 14.sp(color: Colors.grey),
         contentPadding: EdgeInsets.symmetric(horizontal: 10),
         errorStyle: 11.sp(color: Colors.red),
         border: UnderlineInputBorder(
@@ -669,4 +673,4 @@ Widget _textFormFieldV(AddressNotifier provider, String hint, String label,
       return null;
     },
   );
-}  
+}
