@@ -361,7 +361,10 @@
 //   );
 // }
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
@@ -476,9 +479,75 @@ class CreateAddress extends StatelessWidget {
 }
 
 Widget _addressCard(AddressNotifier provider, int i) {
+  final prev = i < provider.count - 1;
   final last = i == provider.count - 1;
+
+  bool hasImage =
+      provider.imageUrlList[i] != null && provider.imageUrlList[i]!.isNotEmpty;
+
+  DecorationImage? bg;
+
+  hasImage
+      ? bg = DecorationImage(
+          image: FileImage(File(provider.imageUrlList[i]!)), fit: BoxFit.cover)
+      : null;
+
   return Column(
     children: [
+      Container(
+        width: 230,
+        height: 250,
+        decoration: BoxDecoration(
+            image: bg,
+            color: Color(0xff333446),
+            borderRadius: BorderRadius.circular(8)),
+        child: bg == null
+            ? Icon(
+                Icons.photo,
+                size: 35,
+                color: Colors.white,
+              )
+            : null,
+      ),
+      SizedBox(
+        height: 10,
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  // fixedSize: Size(width, height)
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  backgroundColor: Colors.transparent),
+              onPressed: () {
+                provider.onPick(ImageSource.gallery, i);
+              },
+              child: Text(
+                'Gallery',
+                style: 15.sp(color: Colors.white),
+              )),
+          SizedBox(
+            width: 25,
+          ),
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  // fixedSize: Size(width, height)
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  backgroundColor: Colors.transparent),
+              onPressed: () {
+                provider.onPick(ImageSource.camera, i);
+              },
+              child: Text(
+                'Camera',
+                style: 15.sp(color: Colors.white),
+              ))
+        ],
+      ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: _textFormField(
@@ -560,7 +629,12 @@ Widget _addressCard(AddressNotifier provider, int i) {
                             icon: Icon(Icons.add))
                       ],
                     )
-                  : SizedBox.shrink())
+                  : SizedBox.shrink()),
+      prev
+          ? SizedBox(
+              height: 30,
+            )
+          : SizedBox.shrink()
     ],
   );
 }

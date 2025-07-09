@@ -235,8 +235,8 @@ class HomeScreen extends StatelessWidget {
                 mini: true,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),
-                onPressed: () {
-                  final created = AppNavigator.push<bool>(
+                onPressed: () async {
+                  final created = await AppNavigator.push<bool>(
                       context,
                       ChangeNotifierProvider.value(
                         value: provider,

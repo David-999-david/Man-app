@@ -160,4 +160,28 @@ class TodoRemote {
           '${e.response?.statusCode} : ${e.response?.data['error']}');
     }
   }
+
+  Future<List<ReturnTestTodo>> createManyTodo(List<TestTodo> todos) async {
+    try {
+      final response = await _dio.post(ApiUrl.createManyTodo,
+          data: {'items': todos.map((todo) => todo.toJson()).toList()});
+
+      final status = response.statusCode!;
+
+      if (status >= 200 && status < 300) {
+        final data = response.data['createdItems'] as List<dynamic>;
+
+        return data
+            .map(
+                (item) => ReturnTestTodo.fromJson(item as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception(
+            'Error => status=$status, message=${response.data['error']}');
+      }
+    } on DioException catch (e) {
+      throw Exception(
+          '${e.response?.statusCode} : ${e.response?.data['error']}');
+    }
+  }
 }

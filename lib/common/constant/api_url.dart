@@ -48,4 +48,6 @@ class ApiUrl {
   static const removeAddress = 'address/';
 
   static const createManyAddress = 'address/bulk';
+
+  static const createManyTodo = 'todos/bulk';
 }

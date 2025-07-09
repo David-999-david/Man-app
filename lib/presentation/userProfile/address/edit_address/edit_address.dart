@@ -69,7 +69,7 @@ class EditAddress extends StatelessWidget {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8))),
                               onPressed: () {
-                                notifier.onPick(ImageSource.gallery);
+                                notifier.onPickEdit(ImageSource.gallery);
                               },
                               child: Text(
                                 'Gallery',
@@ -87,7 +87,7 @@ class EditAddress extends StatelessWidget {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8))),
                               onPressed: () {
-                                notifier.onPick(ImageSource.camera);
+                                notifier.onPickEdit(ImageSource.camera);
                               },
                               child: Text(
                                 'Camera',

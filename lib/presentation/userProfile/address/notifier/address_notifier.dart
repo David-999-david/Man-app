@@ -143,7 +143,7 @@ class AddressNotifier extends ChangeNotifier {
     }
   }
 
-  Future<void> onPick(ImageSource soucre) async {
+  Future<void> onPickEdit(ImageSource soucre) async {
     if (!await requestGalleryAndCameraPer(soucre)) {
       throw Exception('Camera or gallery permission is rejected');
     }
@@ -171,6 +171,7 @@ class AddressNotifier extends ChangeNotifier {
 
     _picked = XFile(cropped.path);
     _imageUrl = cropped.path;
+
     notifyListeners();
   }
 
@@ -362,6 +363,12 @@ class AddressNotifier extends ChangeNotifier {
   int _count = 1;
   int get count => _count;
 
+  List<XFile?> _xfileList = [null];
+  List<XFile?> get xfileList => xfileList;
+
+  List<String?> _imageUrlList = [null];
+  List<String?> get imageUrlList => _imageUrlList;
+
   void callNew() {
     _label.add(TextEditingController());
     _street.add(TextEditingController());
@@ -370,6 +377,8 @@ class AddressNotifier extends ChangeNotifier {
     _country.add(TextEditingController());
     _postal.add(TextEditingController());
     _imageDesc.add(TextEditingController());
+    _xfileList.add(null);
+    _imageUrlList.add(null);
     _count++;
     notifyListeners();
   }
@@ -383,6 +392,8 @@ class AddressNotifier extends ChangeNotifier {
     _country.removeLast();
     _postal.removeLast();
     _imageDesc.removeLast();
+    _xfileList.removeLast();
+    _imageUrlList.removeLast();
     _count--;
     notifyListeners();
   }
@@ -451,5 +462,36 @@ class AddressNotifier extends ChangeNotifier {
     for (final l in _country) l.dispose();
     for (final l in _postal) l.dispose();
     for (final l in _imageDesc) l.dispose();
+  }
+
+  Future<void> onPick(ImageSource soucre, int i) async {
+    if (!await requestGalleryAndCameraPer(soucre)) {
+      throw Exception('Camera or gallery permission is rejected');
+    }
+
+    final picked = await ImagePicker().pickImage(source: soucre);
+
+    if (picked == null) return;
+
+    final cropped = await ImageCropper().cropImage(
+        sourcePath: picked.path,
+        compressFormat: ImageCompressFormat.jpg,
+        compressQuality: 90,
+        maxHeight: 800,
+        maxWidth: 800,
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false,
+              cropFrameColor: Colors.tealAccent),
+          IOSUiSettings(title: 'Crop Image')
+        ]);
+
+    if (cropped == null) return;
+
+    _xfileList[i] = XFile(cropped.path);
+    _imageUrlList[i] = cropped.path;
+    notifyListeners();
   }
 }

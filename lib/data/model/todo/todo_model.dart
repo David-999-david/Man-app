@@ -73,36 +73,47 @@ class TodoImage {
   }
 }
 
-// class AddTodo {
-//   final String title;
-//   final String description;
-//   final FormData? file;
-//   final String? imageDesc;
+class TestTodo {
+  final String title;
+  final String description;
+  final String? imageDesc;
 
-//   AddTodo(
-//       {required this.title,
-//       required this.description,
-//       this.file,
-//       this.imageDesc});
+  TestTodo({required this.title, required this.description, this.imageDesc});
 
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'title': title,
-//       'description': description,
-//       'imageDescription': imageDesc,
-//       ''
-//     };
-//   }
-// }
+  Map<String, dynamic> toJson() {
+    return {'title': title, 'description': description, 'imageDesc': imageDesc};
+  }
+}
 
-// class EdiitTodo {
-//   final String? title;
-//   final String? description;
-//   final bool? completed;
+class ReturnTestTodo {
+  final String title;
+  final String description;
+  final List<ReturnImageTodo> imagetodoList;
 
-//   EdiitTodo({this.title, this.description, this.completed});
+  ReturnTestTodo(
+      {required this.title,
+      required this.description,
+      required this.imagetodoList});
 
-//   Map<String, dynamic> toJson() {
-//     return {'title': title, 'description': description, 'completed': completed};
-//   }
-// }
+  factory ReturnTestTodo.fromJson(Map<String, dynamic> json) {
+    return ReturnTestTodo(
+        title: json['title'] as String,
+        description: json['description'] as String,
+        imagetodoList: (json['images'] as List<dynamic>)
+            .map((item) =>
+                ReturnImageTodo.fromJson(item as Map<String, dynamic>))
+            .toList());
+  }
+}
+
+class ReturnImageTodo {
+  final int id;
+  final String imageDesc;
+
+  ReturnImageTodo({required this.id, required this.imageDesc});
+
+  factory ReturnImageTodo.fromJson(Map<String, dynamic> json) {
+    return ReturnImageTodo(
+        id: json['imageId'] as int, imageDesc: json['imageDesc'] as String);
+  }
+}

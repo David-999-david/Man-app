@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -406,6 +407,115 @@ class HomeNotifier extends ChangeNotifier {
       _msg = e.toString();
     } finally {
       _editingIds.remove(todo.id);
+      notifyListeners();
+    }
+  }
+
+  int _count = 1;
+  int get count => _count;
+
+  void callNew() {
+    _title.add(TextEditingController());
+    _desc.add(TextEditingController());
+    _imageDesc.add(TextEditingController());
+    _xfileList.add(null);
+    _imageUrlList.add(null);
+    _count++;
+    notifyListeners();
+  }
+
+  void undo() {
+    if (_count <= 1) return;
+    _title.removeLast();
+    _desc.removeLast();
+    _imageDesc.removeLast();
+    _xfileList.removeLast();
+    _imageUrlList.removeLast();
+    _count--;
+    notifyListeners();
+  }
+
+  final List<TextEditingController> _title = [TextEditingController()];
+  final List<TextEditingController> _desc = [TextEditingController()];
+  final List<TextEditingController> _imageDesc = [TextEditingController()];
+
+  List<TextEditingController> get title => _title;
+  List<TextEditingController> get desc => _desc;
+  List<TextEditingController> get imageDesc => _imageDesc;
+
+  List<XFile?> _xfileList = [null];
+  List<XFile?> get xfilelist => _xfileList;
+
+  List<String?> _imageUrlList = [null];
+  List<String?> get imageUrlList => _imageUrlList;
+
+  Future<void> onPickCreate(ImageSource source, i) async {
+    if (await requestGalleryAndCameraPer(source)) {
+      final picked = await ImagePicker().pickImage(source: source);
+      if (picked == null) return;
+
+      final cropped = await ImageCropper().cropImage(
+          sourcePath: picked.path,
+          compressFormat: ImageCompressFormat.jpg,
+          compressQuality: 90,
+          maxHeight: 800,
+          maxWidth: 800,
+          uiSettings: [
+            AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false,
+              cropFrameColor: Colors.tealAccent,
+            ),
+            IOSUiSettings(title: 'Crop Image')
+          ]);
+
+      if (cropped == null) return;
+
+      _xfileList[i] = XFile(cropped.path);
+      _imageUrlList[i] = cropped.path;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> addMoreTodo() async {
+    _msg = null;
+    _loading = true;
+    notifyListeners();
+    try {
+      final List<TestTodo> todoList = List.generate(_count, (idx) {
+        return TestTodo(
+            title: title[idx].text,
+            description: desc[idx].text,
+            imageDesc:
+                imageDesc[idx].text.isEmpty ? null : imageDesc[idx].text);
+      });
+
+      await TodoUsecase().createManyTodo(todoList);
+
+      title
+        ..clear()
+        ..add(TextEditingController());
+      desc
+        ..clear()
+        ..add(TextEditingController());
+      imageDesc
+        ..clear()
+        ..add(TextEditingController());
+      _xfileList
+        ..clear()
+        ..add(null);
+      _imageUrlList
+        ..clear()
+        ..add(null);
+      _count = 1;
+
+      return true;
+    } catch (e) {
+      _msg = e.toString();
+      return false;
+    } finally {
+      _loading = false;
       notifyListeners();
     }
   }
