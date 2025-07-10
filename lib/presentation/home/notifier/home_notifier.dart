@@ -102,7 +102,13 @@ class HomeNotifier extends ChangeNotifier {
         final pageTodo = await TodoUsecase()
             .getAllTodo(_searchQuery.text, _currentPage, _limit);
 
+        print('Todo count => ${pageTodo.todos.length}');
+
+        print('Total count => ${pageTodo.total}');
+
         _paginationTodo = pageTodo;
+
+        debugPrint('$paginationTodo, This is paginationTodo');
 
         _todoList = pageTodo.todos;
 
@@ -491,7 +497,31 @@ class HomeNotifier extends ChangeNotifier {
                 imageDesc[idx].text.isEmpty ? null : imageDesc[idx].text);
       });
 
-      await TodoUsecase().createManyTodo(todoList);
+      final form = FormData();
+
+      for (var i = 0; i < todoList.length; i++) {
+        final t = todoList[i];
+
+        form.fields.addAll([
+          MapEntry('items[$i][title]', t.title),
+          MapEntry('items[$i][description]', t.description),
+          MapEntry('items[$i][imageDesc]', t.imageDesc ?? '')
+        ]);
+
+        final image = _xfileList[i];
+
+        if (image != null) {
+          final mime = lookupMimeType(image.path)!.split('/');
+
+          form.files.add(MapEntry(
+              'items[$i][file]',
+              await MultipartFile.fromFileSync(image.path,
+                  filename: image.name,
+                  contentType: MediaType(mime[0], mime[1]))));
+        }
+      }
+
+      await TodoUsecase().createManyTodo(form);
 
       title
         ..clear()

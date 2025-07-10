@@ -19,23 +19,46 @@ class Address extends StatelessWidget {
       child: Consumer<AddressNotifier>(
         builder: (context, notifier, child) {
           return Scaffold(
-            backgroundColor: Color(0xffB8CFCE),
-            body: notifier.loading
-                ? LoadingShow()
-                : Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 30, 15, 20),
-                    child: ListView.separated(
-                        itemBuilder: (context, index) {
-                          final address = notifier.addressList[index];
-                          return _addressCard(address, context, notifier);
-                        },
-                        separatorBuilder: (context, index) {
-                          return SizedBox(
-                            height: 10,
-                          );
-                        },
-                        itemCount: notifier.addressList.length),
-                  ),
+            body: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Color(0xff200122), Color(0xff6f0000)],
+                      begin: Alignment.bottomRight,
+                      end: Alignment.topLeft)),
+              child: notifier.loading
+                  ? LoadingShow()
+                  : notifier.addressList.isEmpty
+                      ? Container(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  colors: [
+                                Color(0xff200122),
+                                Color(0xff6f0000)
+                              ],
+                                  begin: Alignment.bottomRight,
+                                  end: Alignment.topLeft)),
+                          child: Center(
+                              child: Text(
+                            'You have not been add any Address.\ntry Try to add one! 😎',
+                            style: 16.sp(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          )),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 30, 15, 20),
+                          child: ListView.separated(
+                              itemBuilder: (context, index) {
+                                final address = notifier.addressList[index];
+                                return _addressCard(address, context, notifier);
+                              },
+                              separatorBuilder: (context, index) {
+                                return SizedBox(
+                                  height: 10,
+                                );
+                              },
+                              itemCount: notifier.addressList.length),
+                        ),
+            ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.miniEndDocked,
             floatingActionButton: FloatingActionButton(

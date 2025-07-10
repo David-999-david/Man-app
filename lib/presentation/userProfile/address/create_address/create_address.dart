@@ -380,99 +380,100 @@ class CreateAddress extends StatelessWidget {
     return Consumer<AddressNotifier>(
       builder: (context, provider, child) {
         return Scaffold(
-            backgroundColor: Color(0xffB8CFCE),
             body: provider.loading
                 ? LoadingShow()
-                : SingleChildScrollView(
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, top: 30),
-                      child: Form(
-                        key: key,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 5,
-                            ),
-                            provider.loading
-                                ? Card(
-                                    color: Colors.blueAccent.shade100,
-                                    child: LoadingShow(),
-                                  )
-                                : SizedBox(
-                                    height: 10,
+                : Container(
+                  child: SingleChildScrollView(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 10, right: 10, top: 30),
+                        child: Form(
+                          key: key,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 5,
+                              ),
+                              provider.loading
+                                  ? Card(
+                                      color: Colors.blueAccent.shade100,
+                                      child: LoadingShow(),
+                                    )
+                                  : SizedBox(
+                                      height: 10,
+                                    ),
+                              for (var i = 0; i < provider.count; i++)
+                                _addressCard(provider, i),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 240, 240, 240),
+                                          // fixedSize: Size(80, 32),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 5),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          side: BorderSide(color: Colors.grey)),
+                                      onPressed: () {
+                                        AppNavigator.pop(context);
+                                      },
+                                      child: Text(
+                                        'Back',
+                                        style: 12.sp(),
+                                      )),
+                                  SizedBox(
+                                    width: 25,
                                   ),
-                            for (var i = 0; i < provider.count; i++)
-                              _addressCard(provider, i),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                        backgroundColor: const Color.fromARGB(
-                                            255, 240, 240, 240),
-                                        // fixedSize: Size(80, 32),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 5),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        side: BorderSide(color: Colors.grey)),
-                                    onPressed: () {
-                                      AppNavigator.pop(context);
-                                    },
-                                    child: Text(
-                                      'Back',
-                                      style: 12.sp(),
-                                    )),
-                                SizedBox(
-                                  width: 25,
-                                ),
-                                OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                        backgroundColor: const Color.fromARGB(
-                                            255, 240, 240, 240),
-                                        // fixedSize: Size(80, 32),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 5),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        side: BorderSide(
-                                            color: Colors.tealAccent)),
-                                    onPressed: provider.loading
-                                        ? null
-                                        : () async {
-                                            if (!key.currentState!.validate())
-                                              return;
-
-                                            final success =
-                                                await provider.createMany();
-
-                                            if (success) {
-                                              AppNavigator.pop(
-                                                  context, success);
-                                            } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                      content: Text(
-                                                          'Failed to add address')));
-                                            }
-                                          },
-                                    child: Text(
-                                      'ADD',
-                                      style: 12.sp(),
-                                    )),
-                              ],
-                            )
-                          ],
+                                  OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 240, 240, 240),
+                                          // fixedSize: Size(80, 32),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 5),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          side: BorderSide(
+                                              color: Colors.tealAccent)),
+                                      onPressed: provider.loading
+                                          ? null
+                                          : () async {
+                                              if (!key.currentState!.validate())
+                                                return;
+                  
+                                              final success =
+                                                  await provider.createMany();
+                  
+                                              if (success) {
+                                                AppNavigator.pop(
+                                                    context, success);
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            'Failed to add address')));
+                                              }
+                                            },
+                                      child: Text(
+                                        'ADD',
+                                        style: 12.sp(),
+                                      )),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ));
+                ));
       },
     );
   }

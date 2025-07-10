@@ -19,119 +19,125 @@ class Edittodo extends StatelessWidget {
     return Consumer<HomeNotifier>(
       builder: (context, provider, child) {
         return Scaffold(
-          body: provider.onEditLoaidng 
+          body: provider.onEditLoaidng
               ? LoadingShow()
               : Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Center(
                     child: Form(
                       key: provider.key,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _todoImageCard(provider),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          _textFormField(provider.titleCtrl, 'Title'),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          _textFormField(provider.descCtrl, 'Description'),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          _textFormField(
-                              provider.imageDescCtrl, 'Image Description'),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          SizedBox(
-                            height: 70,
-                            child: Row(children: [
-                              Expanded(
-                                child: RadioListTile<bool>(
-                                  dense: true,
-                                  title: Text(
-                                    'Completed',
-                                    style: 14.sp(color: Color(0xFFBDBDBD)),
-                                  ),
-                                  visualDensity: VisualDensity(horizontal: -4),
-                                  contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 35),
-                                  value: true,
-                                  groupValue: provider.completed,
-                                  onChanged: (value) {
-                                    provider.getBool(value!);
-                                  },
-                                ),
-                              ),
-                              Expanded(
-                                child: RadioListTile<bool>(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _todoImageCard(provider),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            _textFormField(provider.titleCtrl, 'Title'),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            _textFormField(provider.descCtrl, 'Description'),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            _textFormField(
+                                provider.imageDescCtrl, 'Image Description'),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            SizedBox(
+                              height: 70,
+                              child: Row(children: [
+                                Expanded(
+                                  child: RadioListTile<bool>(
                                     dense: true,
                                     title: Text(
-                                      'Incompleted',
+                                      'Completed',
                                       style: 14.sp(color: Color(0xFFBDBDBD)),
                                     ),
                                     visualDensity:
                                         VisualDensity(horizontal: -4),
                                     contentPadding:
-                                        EdgeInsets.symmetric(horizontal: -10),
-                                    value: false,
+                                        EdgeInsets.symmetric(horizontal: 35),
+                                    value: true,
                                     groupValue: provider.completed,
                                     onChanged: (value) {
                                       provider.getBool(value!);
-                                    }),
-                              )
-                            ]),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                      fixedSize: Size(80, 32),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 2),
-                                      backgroundColor: Color(0xFFBDBDBD),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: RadioListTile<bool>(
+                                      dense: true,
+                                      title: Text(
+                                        'Incompleted',
+                                        style: 14.sp(color: Color(0xFFBDBDBD)),
                                       ),
-                                      side: BorderSide(color: Colors.white)),
-                                  onPressed: () {
-                                    AppNavigator.pop(context);
-                                  },
-                                  child: Text(
-                                    'Back',
-                                    style: 15.sp(),
-                                  )),
-                              OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                      fixedSize: Size(80, 32),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 2),
-                                      backgroundColor: Color(0xFFBDBDBD),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      side: BorderSide(color: Colors.white)),
-                                  onPressed: () async {
-                                    final success = await provider.onEditTodo();
-                                    if (success) {
-                                      AppNavigator.pop(context, success);
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content:
-                                                  Text('Updated success')));
-                                    }
-                                  },
-                                  child: Text(
-                                    'OK',
-                                    style: 15.sp(),
-                                  ))
-                            ],
-                          )
-                        ],
+                                      visualDensity:
+                                          VisualDensity(horizontal: -4),
+                                      contentPadding:
+                                          EdgeInsets.symmetric(horizontal: -10),
+                                      value: false,
+                                      groupValue: provider.completed,
+                                      onChanged: (value) {
+                                        provider.getBool(value!);
+                                      }),
+                                )
+                              ]),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                        fixedSize: Size(80, 32),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 5, vertical: 2),
+                                        backgroundColor: Color(0xFFBDBDBD),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        side: BorderSide(color: Colors.white)),
+                                    onPressed: () {
+                                      AppNavigator.pop(context);
+                                    },
+                                    child: Text(
+                                      'Back',
+                                      style: 15.sp(),
+                                    )),
+                                OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                        fixedSize: Size(80, 32),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 5, vertical: 2),
+                                        backgroundColor: Color(0xFFBDBDBD),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        side: BorderSide(color: Colors.white)),
+                                    onPressed: () async {
+                                      final success =
+                                          await provider.onEditTodo();
+                                      if (success) {
+                                        AppNavigator.pop(context, success);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content:
+                                                    Text('Updated success')));
+                                      }
+                                    },
+                                    child: Text(
+                                      'OK',
+                                      style: 15.sp(),
+                                    ))
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),

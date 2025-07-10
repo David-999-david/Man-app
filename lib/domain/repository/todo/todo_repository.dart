@@ -35,7 +35,7 @@ class TodoRepository {
     return TodoRemote().updateTodoStatus(id, todoStatus);
   }
 
-  Future<List<ReturnTestTodo>> createManyTodo(List<TestTodo> todos) {
+  Future<List<ReturnTestTodo>> createManyTodo(FormData todos) {
     return TodoRemote().createManyTodo(todos);
   }
 }

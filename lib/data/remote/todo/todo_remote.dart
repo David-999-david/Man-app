@@ -29,6 +29,7 @@ class TodoRemote {
     try {
       final response = await _dio.get(ApiUrl.getAllTodo,
           queryParameters: {'q': query, 'page': page, 'limit': limit});
+      print('Api Response => ${response.data}');
       final status = response.statusCode;
 
       if (status! >= 200 && status < 300) {
@@ -161,10 +162,10 @@ class TodoRemote {
     }
   }
 
-  Future<List<ReturnTestTodo>> createManyTodo(List<TestTodo> todos) async {
+  Future<List<ReturnTestTodo>> createManyTodo(FormData todos) async {
     try {
       final response = await _dio.post(ApiUrl.createManyTodo,
-          data: {'items': todos.map((todo) => todo.toJson()).toList()});
+          data: todos, options: Options(contentType: 'multipart/form-data'));
 
       final status = response.statusCode!;
 

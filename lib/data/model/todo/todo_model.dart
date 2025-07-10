@@ -65,11 +65,11 @@ class TodoImage {
   final String? url;
   final String? imageDesc;
 
-  TodoImage({required this.url, required this.imageDesc});
+  TodoImage({this.url, required this.imageDesc});
 
   factory TodoImage.fromJson(Map<String, dynamic> json) {
     return TodoImage(
-        url: json['url'] as String, imageDesc: json['imageDesc'] as String);
+        url: json['url'] as String?, imageDesc: json['imageDesc'] as String);
   }
 }
 
@@ -109,11 +109,15 @@ class ReturnTestTodo {
 class ReturnImageTodo {
   final int id;
   final String imageDesc;
+  final String imageUrl;
 
-  ReturnImageTodo({required this.id, required this.imageDesc});
+  ReturnImageTodo(
+      {required this.id, required this.imageDesc, required this.imageUrl});
 
   factory ReturnImageTodo.fromJson(Map<String, dynamic> json) {
     return ReturnImageTodo(
-        id: json['imageId'] as int, imageDesc: json['imageDesc'] as String);
+        id: json['id'] as int,
+        imageDesc: json['imageDesc'] as String,
+        imageUrl: json['url']);
   }
 }

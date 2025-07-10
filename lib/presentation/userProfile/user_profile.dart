@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:user_auth/common/helper/app_navigator.dart';
 import 'package:user_auth/core/theme/app_text_style.dart';
 import 'package:user_auth/presentation/userProfile/addedProfile/add_profile_image.dart';
 import 'package:user_auth/presentation/userProfile/address/address.dart';
-import 'package:user_auth/presentation/userProfile/address/create_address/create_address.dart';
 import 'package:user_auth/presentation/userProfile/contact/contact.dart';
 import 'package:user_auth/presentation/userProfile/notifier/user_notifier.dart';
 import 'package:user_auth/presentation/widgets/loading_show.dart';
@@ -19,10 +17,41 @@ class UserProfile extends StatelessWidget {
       create: (context) => UserNotifier()..getUserProfile(),
       child: Consumer<UserNotifier>(
         builder: (context, notifier, child) {
+          bool hasImage = notifier.user?.imageUrl != null &&
+              notifier.user!.imageUrl!.isNotEmpty;
+
+          Widget bg;
+
+          bg = hasImage
+              ? Image.network(notifier.user!.imageUrl!)
+              : Container(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [Color(0xff200122), Color(0xff6f0000)],
+                          begin: Alignment.bottomRight,
+                          end: Alignment.topLeft)),
+                  child: Center(
+                    child: Icon(
+                      Icons.people,
+                      color: Colors.white,
+                      size: 35,
+                    ),
+                  ),
+                );
+
           return Scaffold(
             backgroundColor: Colors.blueGrey,
             body: notifier.isLoading
-                ? LoadingShow()
+                ? Container(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [Color(0xff200122), Color(0xff6f0000)],
+                            begin: Alignment.bottomRight,
+                            end: Alignment.topLeft)),
+                    child: Center(
+                      child: LoadingShow(),
+                    ),
+                  )
                 : CustomScrollView(
                     slivers: [
                       SliverAppBar(
@@ -78,15 +107,7 @@ class UserProfile extends StatelessWidget {
                             background: Stack(
                               fit: StackFit.expand,
                               children: [
-                                notifier.user!.imageUrl == null
-                                    ? SpinKitCircle(
-                                        color: Colors.white,
-                                        size: 20,
-                                      )
-                                    : Image.network(
-                                        notifier.user!.imageUrl.toString(),
-                                        fit: BoxFit.cover,
-                                      ),
+                                bg,
                                 DecoratedBox(
                                     decoration: BoxDecoration(
                                         gradient: LinearGradient(

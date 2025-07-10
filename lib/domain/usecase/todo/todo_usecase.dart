@@ -35,7 +35,7 @@ class TodoUsecase {
     return await TodoRepository().updateTodoStatus(id, todoStatus);
   }
 
-  Future<List<ReturnTestTodo>> createManyTodo(List<TestTodo> todos) async {
+  Future<List<ReturnTestTodo>> createManyTodo(FormData todos) async {
     return await TodoRepository().createManyTodo(todos);
   }
 }
