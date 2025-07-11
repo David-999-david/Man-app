@@ -109,15 +109,14 @@ class ReturnTestTodo {
 class ReturnImageTodo {
   final int id;
   final String imageDesc;
-  final String imageUrl;
+  final String? imageUrl;
 
-  ReturnImageTodo(
-      {required this.id, required this.imageDesc, required this.imageUrl});
+  ReturnImageTodo({required this.id, required this.imageDesc, this.imageUrl});
 
   factory ReturnImageTodo.fromJson(Map<String, dynamic> json) {
     return ReturnImageTodo(
         id: json['id'] as int,
         imageDesc: json['imageDesc'] as String,
-        imageUrl: json['url']);
+        imageUrl: json['url'] as String?);
   }
 }

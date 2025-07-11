@@ -149,6 +149,33 @@ class Edittodo extends StatelessWidget {
 }
 
 Widget _todoImageCard(HomeNotifier notifier) {
+  final editTodoimage = notifier.editTodo?.imageUrl.first.url;
+  final pickedImage = notifier.imageUrl;
+
+  bool hasEditImage = editTodoimage != null && editTodoimage.isNotEmpty;
+
+  bool hasPickImage = pickedImage != null && pickedImage.isNotEmpty;
+
+  Widget bg;
+
+  bg = hasPickImage
+      ? CircleAvatar(
+          radius: 80,
+          backgroundImage: FileImage(File(pickedImage)),
+        )
+      : hasEditImage
+          ? CircleAvatar(
+              radius: 80,
+              backgroundImage: NetworkImage(editTodoimage.toString()),
+            )
+          : CircleAvatar(
+              radius: 80,
+              child: Icon(
+                Icons.people,
+                size: 40,
+              ),
+            );
+
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
     height: 322,
@@ -159,25 +186,7 @@ Widget _todoImageCard(HomeNotifier notifier) {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: CircleAvatar(
-              backgroundImage: notifier.imageUrl!.isNotEmpty
-                  ? FileImage(File(notifier.imageUrl!))
-                  : notifier.editTodo!.imageUrl.isNotEmpty
-                      ? NetworkImage(
-                          notifier.editTodo!.imageUrl.first.url.toString())
-                      : null,
-              radius: 80,
-              child: notifier.editTodo!.imageUrl.isEmpty &&
-                      notifier.imageUrl!.isEmpty
-                  ? Icon(
-                      Icons.person,
-                      size: 60,
-                    )
-                  : null,
-            ),
-          ),
+          Padding(padding: const EdgeInsets.only(top: 5), child: bg),
           SizedBox(
             height: 15,
           ),

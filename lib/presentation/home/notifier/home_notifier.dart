@@ -523,6 +523,8 @@ class HomeNotifier extends ChangeNotifier {
 
       await TodoUsecase().createManyTodo(form);
 
+      print('Added Form with fields and files => $form');
+
       title
         ..clear()
         ..add(TextEditingController());
@@ -541,7 +543,8 @@ class HomeNotifier extends ChangeNotifier {
       _count = 1;
 
       return true;
-    } catch (e) {
+    } catch (e, st) {
+      print('AddMore failed => $e\n$st');
       _msg = e.toString();
       return false;
     } finally {

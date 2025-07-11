@@ -39,7 +39,7 @@ class Address extends StatelessWidget {
                                   end: Alignment.topLeft)),
                           child: Center(
                               child: Text(
-                            'You have not been add any Address.\ntry Try to add one! 😎',
+                            'You have not been add any Address.\nTry to add one! 😎',
                             style: 16.sp(color: Colors.white),
                             textAlign: TextAlign.center,
                           )),
