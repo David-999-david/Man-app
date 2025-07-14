@@ -364,7 +364,7 @@ class AddressNotifier extends ChangeNotifier {
   int get count => _count;
 
   List<XFile?> _xfileList = [null];
-  List<XFile?> get xfileList => xfileList;
+  List<XFile?> get xfileList => _xfileList;
 
   List<String?> _imageUrlList = [null];
   List<String?> get imageUrlList => _imageUrlList;
@@ -399,46 +399,84 @@ class AddressNotifier extends ChangeNotifier {
   }
 
   Future<bool> createMany() async {
+    _msg = null;
     _loading = true;
     notifyListeners();
     try {
-      final List<TestAddress> items = List.generate(_count, (i) {
+      final addressList = List.generate(_count, (idx) {
         return TestAddress(
-            label: _label[i].text,
-            street: _street[i].text,
-            city: _city[i].text,
-            state: _state[i].text,
-            country: _country[i].text,
-            postalCode: _postal[i].text,
-            imageDesc: _imageDesc[i].text);
+            label: label[idx].text,
+            street: street[idx].text,
+            city: city[idx].text,
+            state: state[idx].text,
+            country: country[idx].text,
+            postalCode: postal[idx].text,
+            imageDesc:
+                imageDesc[idx].text.isEmpty ? null : imageDesc[idx].text);
       });
 
-      await AddressUsecase().createMany(items);
+      final form = FormData();
 
-      _label
+      for (var i = 0; i < addressList.length; i++) {
+        form.fields.addAll([
+          MapEntry('addresses[$i][label]', addressList[i].label),
+          MapEntry('addresses[$i][street]', addressList[i].street),
+          MapEntry('addresses[$i][city]', addressList[i].city),
+          MapEntry('addresses[$i][state]', addressList[i].state),
+          MapEntry('addresses[$i][country]', addressList[i].country),
+          MapEntry('addresses[$i][postalCode]', addressList[i].postalCode),
+          MapEntry('addresses[$i][imageDesc]', addressList[i].imageDesc ?? '')
+        ]);
+
+        final image = _xfileList[i];
+
+        print('Image of added => $image');
+
+        if (image != null) {
+          final mime = lookupMimeType(image.path)!.split('/');
+
+          form.files.add(MapEntry(
+              'addresses[$i][image]',
+              await MultipartFile.fromFileSync(image.path,
+                  filename: image.name,
+                  contentType: MediaType(mime[0], mime[1]))));
+        }
+      }
+      await AddressUsecase().createMany(form);
+
+      label
         ..clear()
         ..add(TextEditingController());
-      _street
+      street
         ..clear()
         ..add(TextEditingController());
-      _city
+      city
         ..clear()
         ..add(TextEditingController());
-      _state
+      state
         ..clear()
         ..add(TextEditingController());
-      _country
+      country
         ..clear()
         ..add(TextEditingController());
-      _postal
+      postal
         ..clear()
         ..add(TextEditingController());
-      _imageDesc
+      imageDesc
         ..clear()
         ..add(TextEditingController());
+      _xfileList
+        ..clear()
+        ..add(null);
+      _imageUrlList
+        ..clear()
+        ..add(null);
+
+      _count = 1;
 
       return true;
-    } catch (e) {
+    } catch (e, st) {
+      print('Error => ${e.toString()}');
       _msg = e.toString();
       return false;
     } finally {

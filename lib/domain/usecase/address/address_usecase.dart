@@ -19,7 +19,7 @@ class AddressUsecase {
     return await AddressRepository().removeAddress(id);
   }
 
-  Future<List<ReturnTestAddress>> createMany(List<TestAddress> items) async {
-    return await AddressRepository().createMany(items);
+  Future<List<ReturnTestAddress>> createMany(FormData form) async {
+    return await AddressRepository().createMany(form);
   }
 }

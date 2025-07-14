@@ -193,7 +193,7 @@ Widget _addressCard(
                               ),
                               Text(
                                 address.street.isNotEmpty
-                                    ? address.street
+                                    ? address.street.toUpperCase()
                                     : 'Unknown',
                                 style: 13.sp(
                                     color: address.street.isNotEmpty
@@ -227,7 +227,7 @@ Widget _addressCard(
                               ),
                               Text(
                                   address.country.isNotEmpty
-                                      ? address.country
+                                      ? address.country.toUpperCase()
                                       : 'Unknown',
                                   style: 13.sp(
                                       color: address.country.isNotEmpty

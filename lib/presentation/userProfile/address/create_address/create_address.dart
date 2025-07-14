@@ -383,7 +383,13 @@ class CreateAddress extends StatelessWidget {
             body: provider.loading
                 ? LoadingShow()
                 : Container(
-                  child: SingleChildScrollView(
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [Color(0xff200122), Color(0xff6f0000)],
+                            begin: Alignment.bottomRight,
+                            end: Alignment.topLeft)),
+                    child: SingleChildScrollView(
                       child: Padding(
                         padding:
                             const EdgeInsets.only(left: 10, right: 10, top: 30),
@@ -448,10 +454,10 @@ class CreateAddress extends StatelessWidget {
                                           : () async {
                                               if (!key.currentState!.validate())
                                                 return;
-                  
+
                                               final success =
                                                   await provider.createMany();
-                  
+
                                               if (success) {
                                                 AppNavigator.pop(
                                                     context, success);
@@ -473,7 +479,7 @@ class CreateAddress extends StatelessWidget {
                         ),
                       ),
                     ),
-                ));
+                  ));
       },
     );
   }
@@ -551,7 +557,7 @@ Widget _addressCard(AddressNotifier provider, int i) {
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: _textFormField(
+        child: _textFormFieldDesc(
             provider, 'Image-Description', provider.imageDesc[i]),
       ),
       SizedBox(
@@ -676,6 +682,31 @@ Widget _textFormField(
     AddressNotifier provider, String hint, TextEditingController controller) {
   return TextFormField(
     controller: controller,
+    decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.transparent,
+        hintText: hint,
+        hintStyle: 14.sp(color: Colors.grey),
+        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+        errorStyle: 11.sp(color: Colors.red),
+        border: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.black12),
+        ),
+        focusedBorder:
+            UnderlineInputBorder(borderSide: BorderSide(color: Colors.green)),
+        enabled: true,
+        enabledBorder:
+            UnderlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+        errorBorder:
+            UnderlineInputBorder(borderSide: BorderSide(color: Colors.red))),
+  );
+}
+
+Widget _textFormFieldDesc(
+    AddressNotifier provider, String hint, TextEditingController controller) {
+  return TextFormField(
+    controller: controller,
+    style: 15.sp(color: Colors.white),
     decoration: InputDecoration(
         filled: true,
         fillColor: Colors.transparent,

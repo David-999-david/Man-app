@@ -88,10 +88,10 @@ class AddressRemote {
     }
   }
 
-  Future<List<ReturnTestAddress>> createMany(List<TestAddress> items) async {
+  Future<List<ReturnTestAddress>> createMany(FormData form) async {
     try {
       final response = await _dio.post(ApiUrl.createManyAddress,
-          data: {'items': items.map((item) => item.toJson()).toList()});
+          data: form, options: Options(contentType: 'multipart/form-data'));
 
       final status = response.statusCode!;
 

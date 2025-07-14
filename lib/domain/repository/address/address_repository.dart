@@ -19,7 +19,7 @@ class AddressRepository {
     return AddressRemote().removeAddress(id);
   }
 
-  Future<List<ReturnTestAddress>> createMany(List<TestAddress> items) {
-    return AddressRemote().createMany(items);
+  Future<List<ReturnTestAddress>> createMany(FormData form) {
+    return AddressRemote().createMany(form);
   }
 }
